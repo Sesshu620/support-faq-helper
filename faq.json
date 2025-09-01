@@ -1,0 +1,53 @@
+[
+  {
+    "question": "How do I restore my Lace wallet?",
+    "answer": "Use your recovery phrase in Lace. Ensure all words are typed correctly and in the right order.",
+    "category": "Lace"
+  },
+  {
+    "question": "Does Daedalus support message signing?",
+    "answer": "Currently, Daedalus does not support message signing. Please use Lace for this feature.",
+    "category": "Daedalus"
+  },
+  {
+    "question": "How can I check my staking rewards?",
+    "answer": "You can view your staking rewards directly in Lace under the Staking tab, or by using a Cardano blockchain explorer.",
+    "category": "Staking"
+  },
+  {
+    "question": "How do I restore a Daedalus paper wallet?",
+    "answer": "In Daedalus, go to 'Add wallet' > 'Restore wallet' > 'Daedalus wallet' and select '27-word paper wallet'.",
+    "category": "Daedalus"
+  },
+  {
+    "question": "Can I use Ledger with Lace?",
+    "answer": "Yes. Lace supports Ledger hardware wallets. Connect your device and select 'Hardware Wallet' when adding an account.",
+    "category": "Lace"
+  },
+  {
+    "question": "Why is my balance showing 0 after restoring?",
+    "answer": "Check that your recovery phrase is entered correctly and that you are on the correct network (Mainnet vs Testnet).",
+    "category": "Troubleshooting"
+  },
+  {
+    "question": "Does Lace support multi-delegation?",
+    "answer": "Yes. Lace allows you to delegate to multiple stake pools at once.",
+    "category": "Lace"
+  },
+  {
+    "question": "What should I do if I lose my recovery phrase?",
+    "answer": "Without the recovery phrase you cannot restore your wallet. If possible, move any funds to a new wallet with a safe backup.",
+    "category": "Security"
+  },
+  {
+    "question": "How can I update Lace to the latest version?",
+    "answer": "Visit https://www.lace.io/ and download the latest version, or update via your browser’s extension store.",
+    "category": "Lace"
+  },
+  {
+    "question": "Is Lace mobile available?",
+    "answer": "Lace mobile is under development and will include send, receive, and staking features. See the roadmap at https://www.lace.io/roadmap-2025.pdf.",
+    "category": "Lace"
+  }
+]
+

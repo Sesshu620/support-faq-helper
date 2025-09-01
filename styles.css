@@ -1,0 +1,45 @@
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+#results { 
+    list-style: none; padding: 0; margin-top: 1rem; 
+}
+.faq-item { 
+    padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 0.75rem; 
+}
+.faq-q { 
+    font-weight: 700; margin-bottom: 0.35rem; 
+}
+.faq-a { 
+    color: #333; line-height: 1.5; 
+}
+
+#category { 
+    margin: 0.5rem 0 1rem; padding: 0.4rem;
+ }
+.faq-item { 
+    padding: .75rem 1rem; border:1px solid #ddd; border-radius:8px; margin:.6rem 0; 
+}
+.faq-q { 
+    font-weight:700; margin-bottom:.35rem; 
+}
+.faq-cat { 
+    font-size:.85rem; color:#666; margin-top:.25rem; 
+}
