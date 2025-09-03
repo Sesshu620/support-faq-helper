@@ -146,3 +146,9 @@ kbd{
 
 /* 回答ブロックの余白 */
 .faq-a{ margin-top:8px; }
+
+mark {
+  background: #ffec99;
+  padding: 0 2px;
+  border-radius: 3px;
+}

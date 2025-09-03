@@ -65,20 +65,21 @@ function renderList(items: FAQItem[]) {
     return;
   }
 
+  const term = searchInput.value.toLowerCase().trim();
+
   for (const f of items) {
     const li = document.createElement('li');
     li.className = 'faq-item';
 
-    // <details> で開閉UIを作る（デフォルトは閉じる）
     const details = document.createElement('details');
 
     const summary = document.createElement('summary');
     summary.className = 'faq-q';
-    summary.textContent = f.question;
+    summary.innerHTML = highlight(f.question, term);
 
     const a = document.createElement('div');
     a.className = 'faq-a';
-    a.textContent = f.answer;
+    a.innerHTML = highlight(f.answer, term);
 
     details.appendChild(summary);
     details.appendChild(a);
@@ -87,13 +88,20 @@ function renderList(items: FAQItem[]) {
       const cat = document.createElement('div');
       cat.className = 'faq-cat';
       cat.textContent = `#${f.category}`;
-      a.appendChild(cat); // 回答の下にバッジ
+      a.appendChild(cat);
     }
 
     li.appendChild(details);
     resultsList.appendChild(li);
   }
 }
+
+function highlight(text: string, term: string): string {
+  if (!term) return text;
+  const regex = new RegExp(`(${term})`, 'gi');
+  return text.replace(regex, `<mark>$1</mark>`);
+}
+
 
 // フッターの日付表示
 const footer = document.querySelector('.app-footer small') as HTMLElement;

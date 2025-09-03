@@ -48,6 +48,87 @@
     "question": "Is Lace mobile available?",
     "answer": "Lace mobile is under development and will include send, receive, and staking features. See the roadmap at https://www.lace.io/roadmap-2025.pdf.",
     "category": "Lace"
+  },
+  {
+    "question": "How long until I see staking rewards after delegating?",
+    "answer": "Rewards begin about 2 epochs after you delegate (≈10 days). You’ll then receive rewards every epoch while you stay delegated.",
+    "category": "Staking"
+  },
+  {
+    "question": "Can I change stake pools any time?",
+    "answer": "Yes. Delegation is not locked. Switching pools is immediate, but rewards from the new pool start about 2 epochs later.",
+    "category": "Staking"
+  },
+  {
+    "question": "Why does my wallet show a new receive address each time?",
+    "answer": "For privacy, HD wallets generate fresh addresses automatically. All addresses belong to the same wallet; your total balance is combined.",
+    "category": "Security"
+  },
+  {
+    "question": "What’s the minimum ADA needed when holding/sending native tokens?",
+    "answer": "Cardano requires a small ADA amount (min-UTxO) with each output that holds tokens. Lace calculates this automatically when you send.",
+    "category": "Tokens"
+  },
+  {
+    "question": "My transaction is pending for a long time—what can I do?",
+    "answer": "Ensure your wallet is fully synced and online. Network load and transaction size affect confirmation time. If it still hangs, try again later with a simpler output set.",
+    "category": "Transactions"
+  },
+  {
+    "question": "What’s the difference between Mainnet and Testnet?",
+    "answer": "Mainnet is the live network with real ADA. Testnets are for testing only and use test ADA. Always confirm you’re on Mainnet before sending funds.",
+    "category": "Network"
+  },
+  {
+    "question": "Can I send multiple tokens in one transaction?",
+    "answer": "Yes. Cardano UTxO supports multiple assets per transaction. Make sure there is enough ADA to satisfy the min-UTxO for each output.",
+    "category": "Tokens"
+  },
+  {
+    "question": "Hardware wallet is not detected in Lace—any tips?",
+    "answer": "Unlock your device, open the Cardano app on it, connect via USB, and approve any prompts in the browser. Try a different cable/USB port if needed.",
+    "category": "Hardware Wallet"
+  },
+  {
+    "question": "Daedalus is stuck syncing. How can I fix it?",
+    "answer": "Daedalus is a full node and initial sync can take many hours. Check disk space, internet stability, and system time. Restart the app; if needed, review logs or reinstall.",
+    "category": "Daedalus"
+  },
+  {
+    "question": "How are Cardano transaction fees determined?",
+    "answer": "Fees are based on transaction size and protocol parameters. Wallets set fees automatically; unusually large transactions (many assets/outputs) cost more.",
+    "category": "Fees"
+  },
+  {
+    "question": "How do I connect Lace to a dApp?",
+    "answer": "Open the dApp in your browser and click 'Connect Wallet'. Choose Lace from the list. Approve the connection in the Lace pop-up.",
+    "category": "dApps"
+  },
+  {
+    "question": "Why is the dApp connection failing?",
+    "answer": "Make sure Lace is unlocked, your browser allows pop-ups, and you are on the correct network (Mainnet vs Testnet). Some dApps only support specific networks.",
+    "category": "dApps"
+  },
+  {
+    "question": "How do I revoke a dApp connection in Lace?",
+    "answer": "In Lace, go to 'Settings' → 'Connected dApps'. From there you can remove any dApp you no longer want linked to your wallet.",
+    "category": "dApps"
+  },
+  {
+    "question": "Can I recover my wallet if I only have the address?",
+    "answer": "No. A Cardano wallet can only be recovered with the recovery phrase (seed). Addresses alone are not enough.",
+    "category": "Recovery"
+  },
+  {
+    "question": "How do I restore a wallet in Lace?",
+    "answer": "On the start screen, choose 'Restore Wallet', then enter your 12-, 15-, 24- or 27-word recovery phrase, depending on the wallet type.",
+    "category": "Recovery"
+  },
+  {
+    "question": "What should I do if I typed my recovery phrase incorrectly?",
+    "answer": "Ensure correct spelling and order of all words. If even one word is wrong, the wallet cannot be restored. Double-check against the official BIP39 word list.",
+    "category": "Recovery"
   }
+  
 ]
 

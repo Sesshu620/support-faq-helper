@@ -2,19 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Support FAQ Helper</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>Support FAQ Helper</h1>
-  <input type="search" id="search" placeholder="Search FAQs..." />
-   <select id="category">
-    <option value="">All categories</option>
-   </select>
-   <ul id="results"></ul>
+  <header class="app-header">
+    <div class="container">
+      <h1>Support FAQ Helper</h1>
+      <p class="subtitle">Search and filter common questions for Lace / Daedalus / Staking</p>
 
-  <ul id="results"></ul>
+      <div class="toolbar">
+        <input id="search" type="search" placeholder="Search (e.g., Ledger, staking, restore)"/>
+        <select id="category">
+          <option value="">All categories</option>
+          <!-- JSがFAQから自動でカテゴリを追加 -->
+        </select>
+      </div>
+      <div id="result-meta" class="result-meta">Loading FAQs…</div>
+    </div>
+  </header>
+
+  <main class="container">
+    <ul id="results" class="results"></ul>
+  </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <small>Updated just now • Keyboard: <kbd>/</kbd> focus search</small>
+    </div>
+  </footer>
+
   <script src="app.js" defer></script>
 </body>
 </html>
