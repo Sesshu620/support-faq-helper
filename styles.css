@@ -108,18 +108,23 @@ h1{margin:0 0 6px;font-size:28px;letter-spacing:.2px}
   border-color:rgba(255,255,255,.14);
 }
 
-.faq-q{font-weight:700;font-size:16px;margin:0 0 8px}
-.faq-a{color:#d9e1f2;}
-.faq-cat{
-  display:inline-block;
-  margin-top:10px;
-  padding:4px 10px;
-  font-size:12px;
-  color:#0a1222;
-  background:linear-gradient(180deg,#9fd0ff,#6bb4ff);
-  border-radius:999px;
-  font-weight:600;
+/* FAQ Answer */
+.faq-a {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
 }
+
+/* Light mode → 文字を濃いグレーに */
+body.light .faq-a {
+  color: #374151;   /* gray-700 */
+}
+
+/* Dark mode → 明るいグレーに */
+body.dark .faq-a {
+  color: #d1d5db;   /* gray-300 */
+}
+
 
 .app-footer{
   position:sticky;bottom:0;
@@ -185,3 +190,29 @@ mark {
   padding: 0 2px;
   border-radius: 3px;
 }
+
+/* ==== Category badge colors ==== */
+.faq-cat {
+  display:inline-block;
+  margin-top:10px;
+  padding:4px 10px;
+  font-size:12px;
+  border-radius:999px;
+  font-weight:600;
+  background:#e5e7eb;
+  color:#0a1222;
+}
+
+/* Individual categories */
+.faq-cat[data-cat="Lace"] { background:#dbeafe; }
+.faq-cat[data-cat="Daedalus"] { background:#fde68a; }
+.faq-cat[data-cat="Staking"] { background:#bbf7d0; }
+.faq-cat[data-cat="Security"] { background:#fecaca; }
+.faq-cat[data-cat="Tokens"] { background:#f5d0fe; }
+.faq-cat[data-cat="Transactions"] { background:#fed7aa; }
+.faq-cat[data-cat="Network"] { background:#ddd6fe; }
+.faq-cat[data-cat="Hardware Wallet"] { background:#bae6fd; }
+.faq-cat[data-cat="Fees"] { background:#e9d5ff; }
+.faq-cat[data-cat="dApps"] { background:#cffafe; }
+.faq-cat[data-cat="Recovery"] { background:#fde2e4; }
+.faq-cat[data-cat="Browser Extension"] { background:#e0e7ff; }
