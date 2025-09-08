@@ -7,6 +7,67 @@ const resultMeta   = document.getElementById('result-meta') as HTMLDivElement;
 
 let faqs: FAQItem[] = [];
 
+// ===== Theme toggle =====
+const root = document.documentElement; // <html>
+const themeBtn = document.getElementById('themeToggle') as HTMLButtonElement;
+const themeStatus = document.getElementById('themeStatus') as HTMLSpanElement;
+
+// 既存のテーマ切替コードの近くに追加
+const updatedAt = document.getElementById('updatedAt') as HTMLElement;
+
+// faq.json の Last-Modified を使って更新日を表示
+fetch('./faq.json?ts=' + Date.now())
+  .then(res => {
+    const lastModified = res.headers.get('Last-Modified');
+    if (lastModified && updatedAt) {
+      const formatted = new Date(lastModified).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric'
+      });
+      updatedAt.textContent = `Updated: ${formatted}`;
+    }
+    return res.json();
+  })
+  .then((data: FAQItem[]) => {
+    faqs = data;
+    initCategoryOptions(faqs);
+    resultMeta.textContent = `${faqs.length} FAQs loaded`;
+    renderList(faqs);
+  })
+  .catch(console.error);
+
+
+// 初期テーマ決定：localStorage > OS設定 > light
+function getInitialTheme(): 'light' | 'dark' {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light' || saved === 'dark') return saved as 'light' | 'dark';
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  return prefersDark ? 'dark' : 'light';
+}
+
+function applyTheme(mode: 'light' | 'dark') {
+  if (mode === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+    themeBtn?.setAttribute('aria-pressed', 'true');
+    themeBtn.textContent = '🌙';
+    if (themeStatus) themeStatus.textContent = "Theme: Dark";
+  } else {
+    root.removeAttribute('data-theme'); // lightがデフォルト
+    themeBtn?.setAttribute('aria-pressed', 'false');
+    themeBtn.textContent = '🌞';
+    if (themeStatus) themeStatus.textContent = "Theme: Light";
+  }
+}
+
+let currentTheme: 'light' | 'dark' = getInitialTheme();
+applyTheme(currentTheme);
+
+themeBtn?.addEventListener('click', () => {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+  localStorage.setItem('theme', currentTheme);
+});
+
+
 fetch('faq.json?ts=' + Date.now())
   .then(res => {
     if (!res.ok) throw new Error('Failed to load faq.json: ' + res.status);
@@ -112,5 +173,6 @@ if (footer) {
     month: 'short',
     day: 'numeric'
   });
-  footer.textContent = `Updated: ${formatted} • Keyboard: / focus search`;
+  /* footer.textContent = `Updated: ${formatted} • Keyboard: / focus search`; */
+
 }
