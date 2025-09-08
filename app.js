@@ -1,35 +1,8 @@
 "use strict";
-const searchInput = document.getElementById('search');
-const resultsList = document.getElementById('results');
-const categorySel = document.getElementById('category');
-const resultMeta = document.getElementById('result-meta');
-let faqs = [];
 // ===== Theme toggle =====
 const root = document.documentElement; // <html>
 const themeBtn = document.getElementById('themeToggle');
 const themeStatus = document.getElementById('themeStatus');
-// 既存のテーマ切替コードの近くに追加
-const updatedAt = document.getElementById('updatedAt');
-// faq.json の Last-Modified を使って更新日を表示
-fetch('./faq.json?ts=' + Date.now())
-    .then(res => {
-    const lastModified = res.headers.get('Last-Modified');
-    if (lastModified && updatedAt) {
-        const formatted = new Date(lastModified).toLocaleDateString('en-US', {
-            year: 'numeric', month: 'short', day: 'numeric'
-        });
-        updatedAt.textContent = `Updated: ${formatted}`;
-    }
-    return res.json();
-})
-    .then((data) => {
-    faqs = data;
-    initCategoryOptions(faqs);
-    resultMeta.textContent = `${faqs.length} FAQs loaded`;
-    renderList(faqs);
-})
-    .catch(console.error);
-// 初期テーマ決定：localStorage > OS設定 > light
 function getInitialTheme() {
     var _a;
     const saved = localStorage.getItem('theme');
@@ -42,16 +15,18 @@ function applyTheme(mode) {
     if (mode === 'dark') {
         root.setAttribute('data-theme', 'dark');
         themeBtn === null || themeBtn === void 0 ? void 0 : themeBtn.setAttribute('aria-pressed', 'true');
-        themeBtn.textContent = '🌙';
+        if (themeBtn)
+            themeBtn.textContent = '🌙';
         if (themeStatus)
-            themeStatus.textContent = "Theme: Dark";
+            themeStatus.textContent = 'Theme: Dark';
     }
     else {
-        root.removeAttribute('data-theme'); // lightがデフォルト
+        root.removeAttribute('data-theme'); // light as default
         themeBtn === null || themeBtn === void 0 ? void 0 : themeBtn.setAttribute('aria-pressed', 'false');
-        themeBtn.textContent = '🌞';
+        if (themeBtn)
+            themeBtn.textContent = '🌞';
         if (themeStatus)
-            themeStatus.textContent = "Theme: Light";
+            themeStatus.textContent = 'Theme: Light';
     }
 }
 let currentTheme = getInitialTheme();
@@ -61,10 +36,22 @@ themeBtn === null || themeBtn === void 0 ? void 0 : themeBtn.addEventListener('c
     applyTheme(currentTheme);
     localStorage.setItem('theme', currentTheme);
 });
-fetch('faq.json?ts=' + Date.now())
+const searchInput = document.getElementById('search');
+const resultsList = document.getElementById('results');
+const categorySel = document.getElementById('category');
+const resultMeta = document.getElementById('result-meta');
+const updatedAt = document.getElementById('updatedAt');
+let faqs = [];
+// fetch faq.json and set Updated date from Last-Modified header
+fetch('./faq.json?ts=' + Date.now())
     .then(res => {
-    if (!res.ok)
-        throw new Error('Failed to load faq.json: ' + res.status);
+    const lm = res.headers.get('Last-Modified');
+    if (lm && updatedAt) {
+        const formatted = new Date(lm).toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric'
+        });
+        updatedAt.textContent = `Updated: ${formatted}`;
+    }
     return res.json();
 })
     .then((data) => {
@@ -90,8 +77,9 @@ function applyFilters() {
     const term = searchInput.value.toLowerCase().trim();
     const cat = categorySel.value;
     const filtered = faqs.filter(f => {
-        const matchesText = f.question.toLowerCase().includes(term) ||
-            f.answer.toLowerCase().includes(term);
+        const tQ = f.question.toLowerCase();
+        const tA = f.answer.toLowerCase();
+        const matchesText = !term || tQ.includes(term) || tA.includes(term);
         const matchesCat = !cat || f.category === cat;
         return matchesText && matchesCat;
     });
@@ -106,6 +94,13 @@ window.addEventListener('keydown', (e) => {
         searchInput.focus();
     }
 });
+function highlight(text, term) {
+    if (!term)
+        return text;
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
 function renderList(items) {
     resultsList.innerHTML = '';
     if (!items.length) {
@@ -123,35 +118,20 @@ function renderList(items) {
         const summary = document.createElement('summary');
         summary.className = 'faq-q';
         summary.innerHTML = highlight(f.question, term);
+        // Category badge on the question line (always visible)
+        if (f.category) {
+            const badge = document.createElement('span');
+            badge.className = 'faq-cat';
+            badge.dataset.cat = f.category; // for CSS color mapping
+            badge.textContent = ` #${f.category}`;
+            summary.appendChild(badge);
+        }
         const a = document.createElement('div');
         a.className = 'faq-a';
         a.innerHTML = highlight(f.answer, term);
         details.appendChild(summary);
         details.appendChild(a);
-        if (f.category) {
-            const cat = document.createElement('div');
-            cat.className = 'faq-cat';
-            cat.textContent = `#${f.category}`;
-            a.appendChild(cat);
-        }
         li.appendChild(details);
         resultsList.appendChild(li);
     }
-}
-function highlight(text, term) {
-    if (!term)
-        return text;
-    const regex = new RegExp(`(${term})`, 'gi');
-    return text.replace(regex, `<mark>$1</mark>`);
-}
-// フッターの日付表示
-const footer = document.querySelector('.app-footer small');
-if (footer) {
-    const today = new Date();
-    const formatted = today.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-    /* footer.textContent = `Updated: ${formatted} • Keyboard: / focus search`; */
 }
