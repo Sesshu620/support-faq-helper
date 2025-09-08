@@ -18,7 +18,15 @@
           <option value="">All categories</option>
           <!-- JSがFAQから自動でカテゴリを追加 -->
         </select>
-      </div>
+
+        <!-- Theme toggle -->
+        <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle theme">
+          🌞/🌙
+        </button>
+     </div>
+
+
+
       <div id="result-meta" class="result-meta">Loading FAQs…</div>
     </div>
   </header>
@@ -28,10 +36,14 @@
   </main>
 
   <footer class="app-footer">
-    <div class="container">
-      <small>Updated just now • Keyboard: <kbd>/</kbd> focus search</small>
-    </div>
-  </footer>
+  <div class="container">
+    <small>
+      <span id="updatedAt">Updated: —</span>
+      • Keyboard: <kbd>/</kbd> focus search •
+      <span id="themeStatus">Theme: Light</span>
+    </small>
+  </div>
+</footer>
 
   <script src="app.js" defer></script>
 </body>

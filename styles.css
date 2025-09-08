@@ -1,4 +1,17 @@
+/* ==== Light theme (default) ==== */
 :root{
+  --bg:#f6f8fc;
+  --panel:#ffffff;
+  --panel-2:#f2f5fb;
+  --text:#0b1020;
+  --muted:#5b6478;
+  --brand:#2563eb;
+  --border:rgba(0,0,0,.08);
+  --shadow:0 8px 28px rgba(0,0,0,.08);
+}
+
+/* ==== Dark theme ==== */
+:root[data-theme="dark"]{
   --bg:#0b1020;
   --panel:#131a2b;
   --panel-2:#0f1626;
@@ -9,14 +22,34 @@
   --shadow:0 8px 28px rgba(0,0,0,.35);
 }
 
-*{box-sizing:border-box}
-html,body{height:100%}
+/* 既存の body / .container / .results ... のスタイルはそのまま。
+   背景や文字色などは変数(var(--...))を使っているのでテーマに追従します。 */
+
 body{
   margin:0;
-  background:linear-gradient(180deg, var(--bg), #0a0f1d 40%, #0a0d19 100%);
+  background:linear-gradient(180deg, var(--bg), #fff 40%, #fff 100%); /* lightグラデ */
   color:var(--text);
   font:16px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
 }
+
+:root[data-theme="dark"] body{
+  background:linear-gradient(180deg, var(--bg), #0a0f1d 40%, #0a0d19 100%); /* darkグラデ */
+}
+
+/* トグルボタンの見た目 */
+.theme-toggle{
+  flex:0 0 auto;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 12px;
+  cursor:pointer;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.02);
+}
+.theme-toggle:hover{ filter:brightness(1.05); }
+.theme-toggle[aria-pressed="true"]{ outline:2px solid var(--brand); }
+
 
 .container{max-width:900px;margin:0 auto;padding:20px}
 
