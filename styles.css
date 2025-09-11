@@ -1,209 +1,237 @@
-/* ==== Light theme (default) ==== */
-:root{
-  --bg:#f6f8fc;
-  --panel:#ffffff;
-  --panel-2:#f2f5fb;
-  --text:#0b1020;
-  --muted:#5b6478;
-  --brand:#2563eb;
-  --border:rgba(0,0,0,.08);
-  --shadow:0 8px 28px rgba(0,0,0,.08);
+/* ===============================
+   THEME VARIABLES
+   =============================== */
+
+/* Base (Light). Also apply when data-theme="light" */
+:root,
+:root[data-theme="light"] {
+  --bg: #ffffff;          /* page background */
+  --text: #0a0a0a;        /* primary text */
+  --card-bg: #f7f7f9;     /* card/table surface */
+  --border: #e5e7eb;      /* borders and dividers */
+
+  /* Additional surfaces / accents used in UI */
+  --panel: #f9fafb;       /* inputs / panels in light */
+  --panel-2: #f3f4f6;     /* subtle gradient stop */
+  --muted: #475569;       /* secondary text */
+  --brand: #60a5fa;       /* focus/outline color */
+  --shadow: 0 8px 24px rgba(0,0,0,.08);
 }
 
-/* ==== Dark theme ==== */
-:root[data-theme="dark"]{
-  --bg:#0b1020;
-  --panel:#131a2b;
-  --panel-2:#0f1626;
-  --text:#e9edf5;
-  --muted:#b7c1d9;
-  --brand:#5aa6ff;
-  --border:rgba(255,255,255,.08);
-  --shadow:0 8px 28px rgba(0,0,0,.35);
+/* Dark theme overrides */
+:root[data-theme="dark"] {
+  --bg: #0b1220;
+  --text: #e5e7eb;
+  --card-bg: #141b2d;
+  --border: #243046;
+
+  --panel: #111827;
+  --panel-2: #0f172a;
+  --muted: #9aa7bd;
+  --brand: #93c5fd;
+  --shadow: 0 14px 36px rgba(0,0,0,.45);
 }
 
-/* 既存の body / .container / .results ... のスタイルはそのまま。
-   背景や文字色などは変数(var(--...))を使っているのでテーマに追従します。 */
 
-body{
-  margin:0;
-  background:linear-gradient(180deg, var(--bg), #fff 40%, #fff 100%); /* lightグラデ */
-  color:var(--text);
-  font:16px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
+/* ===============================
+   GLOBAL ELEMENTS
+   =============================== */
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-:root[data-theme="dark"] body{
-  background:linear-gradient(180deg, var(--bg), #0a0f1d 40%, #0a0d19 100%); /* darkグラデ */
+/* Optional dark gradient overlay for page body */
+:root[data-theme="dark"] body {
+  background: linear-gradient(180deg, var(--bg), #0a0f1d 40%, #0a0d19 100%);
 }
 
-/* トグルボタンの見た目 */
-.theme-toggle{
-  flex:0 0 auto;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px 12px;
-  cursor:pointer;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.02);
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
 }
-.theme-toggle:hover{ filter:brightness(1.05); }
-.theme-toggle[aria-pressed="true"]{ outline:2px solid var(--brand); }
 
-
-.container{max-width:900px;margin:0 auto;padding:20px}
-
-.app-header{
-  border-bottom:1px solid var(--border);
-  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: .2px;
 }
-h1{margin:0 0 6px;font-size:28px;letter-spacing:.2px}
-.subtitle{margin:0;color:var(--muted)}
 
-.toolbar{
-  display:flex;gap:12px;align-items:center;margin-top:16px;
+.subtitle {
+  margin: 0;
+  color: var(--muted);
 }
+
+
+/* ===============================
+   HEADER / FOOTER
+   =============================== */
+
+.app-header {
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+}
+
+.app-footer {
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid var(--border);
+  background: rgba(10,14,25,.6);      /* translucent footer works for both themes */
+  backdrop-filter: blur(6px);
+}
+
+.nav-links a {
+  margin-right: 10px;
+}
+
+
+/* ===============================
+   THEME TOGGLE (ICON-ONLY)
+   =============================== */
+
+/* Show 🌞 in light, 🌙 in dark via pseudo-element */
+.theme-emoji::before { content: "🌞"; }                  /* light */
+:root[data-theme="dark"] .theme-emoji::before { content: "🌙"; }  /* dark */
+
+/* optional: size/align to match your header */
+.theme-toggle { 
+  padding: 6px 8px; 
+  border: 1px solid var(--border); 
+  background: transparent; 
+  color: var(--text);
+  border-radius: 8px; 
+  display: inline-flex; 
+  align-items: center; 
+  justify-content: center; 
+  cursor: pointer;
+  line-height: 1; 
+  font-size: 18px;           /* tweak if you want it bigger/smaller */
+}
+
+
+
+/* ===============================
+   CONTROLS (SEARCH / SELECTS)
+   =============================== */
+
+.toolbar,
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
 .toolbar input[type="search"],
-.toolbar select{
-  flex:1;
-  background:var(--panel);
-  color:var(--text);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px 14px;
-  outline:none;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+.toolbar select,
+.controls input[type="search"],
+.controls select {
+  flex: 1;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  outline: none;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
-.toolbar select{flex:0 0 220px}
-
-.result-meta{
-  margin-top:10px;
-  color:var(--muted);
-  font-size:14px;
-}
-
-.results{
-  list-style:none;
-  margin:22px 0 60px;
-  padding:0;
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-}
-@media (min-width:760px){
-  .results{grid-template-columns:1fr 1fr}
+.toolbar select,
+.controls select {
+  flex: 0 0 220px;
 }
 
-.faq-item{
-  background:linear-gradient(180deg, var(--panel), var(--panel-2));
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px 16px 14px;
-  box-shadow:var(--shadow);
-  transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
-}
-.faq-item:hover{
-  transform:translateY(-2px);
-  box-shadow:0 14px 36px rgba(0,0,0,.45);
-  border-color:rgba(255,255,255,.14);
-}
-
-/* FAQ Answer */
-.faq-a {
-  margin-top: 8px;
+.result-meta {
+  margin-top: 10px;
+  color: var(--muted);
   font-size: 14px;
-  line-height: 1.5;
-}
-
-/* Light mode → 文字を濃いグレーに */
-body.light .faq-a {
-  color: #374151;   /* gray-700 */
-}
-
-/* Dark mode → 明るいグレーに */
-body.dark .faq-a {
-  color: #d1d5db;   /* gray-300 */
 }
 
 
-.app-footer{
-  position:sticky;bottom:0;
-  border-top:1px solid var(--border);
-  background:rgba(10,14,25,.6);
-  backdrop-filter:blur(6px);
-}
-kbd{
-  background:#111826;border:1px solid var(--border);
-  border-bottom-color:rgba(0,0,0,.6);
-  border-radius:6px;padding:2px 6px;font-family:ui-monospace,Menlo,Consolas,monospace;
-  font-size:12px;color:#cbd5e1;
-}
+/* ===============================
+   CARDS / LISTS / TABLES
+   =============================== */
 
-.empty{
-  grid-column:1/-1;
-  text-align:center;
-  color:var(--muted);
-  padding:28px 14px;
-  border:1px dashed var(--border);
-  border-radius:16px;
-  background:rgba(255,255,255,.02);
+.results {
+  list-style: none;
+  margin: 22px 0 60px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width:760px) {
+  .results { grid-template-columns: 1fr 1fr; }
 }
 
-/* ===== Collapsible (details/summary) ===== */
-.faq-item details{
-  display:block;
+/* Generic “card” surface */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: var(--shadow);
 }
 
-.faq-item summary{
-  list-style:none;
-  cursor:pointer;
-  outline:none;
+/* FAQ-like item (kept for reuse) */
+.faq-item {
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 16px 14px;
+  box-shadow: var(--shadow);
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.faq-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.45);
+  border-color: rgba(255,255,255,.14);
 }
 
-.faq-item summary::-webkit-details-marker{ display:none; }
+/* FAQ Answer text color by theme */
+.faq-a { margin-top: 8px; font-size: 14px; line-height: 1.5; }
+:root[data-theme="light"] .faq-a { color: #374151; }  /* gray-700 */
+:root[data-theme="dark"]  .faq-a { color: #d1d5db; }  /* gray-300 */
 
-/* 見た目のトグル矢印 */
-.faq-item summary::before{
+/* Details/Summary disclosure caret */
+.faq-item details { display: block; }
+.faq-item summary { list-style: none; cursor: pointer; outline: none; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::before {
   content: "▸";
-  display:inline-block;
-  margin-right:8px;
+  display: inline-block;
+  margin-right: 8px;
   transform: translateY(-1px);
   transition: transform .15s ease;
-  opacity:.9;
+  opacity: .9;
 }
+.faq-item details[open] summary::before { transform: rotate(90deg) translateY(-1px); }
+.faq-item details[open] { border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,.45); }
 
-.faq-item details[open] summary::before{
-  transform: rotate(90deg) translateY(-1px);
-}
-
-/* 開いた時にカードを少し強調 */
-.faq-item details[open]{
-  border-radius:12px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.45);
-}
-
-/* 回答ブロックの余白 */
-.faq-a{ margin-top:8px; }
-
+/* Mark highlight */
 mark {
   background: #ffec99;
   padding: 0 2px;
   border-radius: 3px;
 }
 
-/* ==== Category badge colors ==== */
+/* Category badges (static palette; adjust if desired) */
 .faq-cat {
-  display:inline-block;
-  margin-top:10px;
-  padding:4px 10px;
-  font-size:12px;
-  border-radius:999px;
-  font-weight:600;
-  background:#e5e7eb;
-  color:#0a1222;
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #0a1222;
 }
-
-/* Individual categories */
 .faq-cat[data-cat="Lace"] { background:#dbeafe; }
 .faq-cat[data-cat="Daedalus"] { background:#fde68a; }
 .faq-cat[data-cat="Staking"] { background:#bbf7d0; }
@@ -216,3 +244,55 @@ mark {
 .faq-cat[data-cat="dApps"] { background:#cffafe; }
 .faq-cat[data-cat="Recovery"] { background:#fde2e4; }
 .faq-cat[data-cat="Browser Extension"] { background:#e0e7ff; }
+
+/* Table wrappers using variables (for cards page) */
+.table-wrap { overflow: auto; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 880px; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; color: var(--text); }
+th { font-weight: 700; cursor: pointer; }
+thead th { position: sticky; top: 0; background: var(--panel-2); }
+
+/* Small badges inside table */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 12px; }
+.b-green { background:#dcfce7; color:#166534; }
+.b-slate { background:#e2e8f0; color:#0f172a; }
+.b-amber { background:#fef3c7; color:#92400e; }
+
+/* Misc */
+.result-meta { margin-top: 10px; color: var(--muted); font-size: 14px; }
+.rank { font-weight: 800; }
+
+kbd {
+  background: #111826;
+  border: 1px solid var(--border);
+  border-bottom-color: rgba(0,0,0,.6);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 28px 14px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  background: rgba(255,255,255,.02);
+}
+
+/* Emoji icon – always allocate size so it's visible */
+.theme-emoji{
+  display:inline-block;      /* ensure pseudo-element shows */
+  width:1em; height:1em;     /* reserve space */
+  line-height:1;             /* avoid vertical clipping */
+  font-size:18px;            /* adjust as you like */
+}
+
+/* Default: LIGHT = sun */
+.theme-emoji::before{ content:"🌞"; }
+
+/* DARK = moon */
+:root[data-theme="dark"] .theme-emoji::before{ content:"🌙"; }

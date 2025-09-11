@@ -5,224 +5,229 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crypto Cards</title>
   <link rel="stylesheet" href="styles.css" />
+
   <style>
-    /* 既存のstyles.cssで十分ならここは不要。最低限の見た目だけ念のため */
-    .table-wrap{overflow:auto;background:#fff;border-radius:12px;border:1px solid #e5e7eb}
+    /* Use theme variables instead of fixed colors so dark/light works */
+    :root, :root[data-theme="light"] {
+      /* If these are already in styles.css, you can remove this block */
+      --bg: #ffffff;
+      --text: #0a0a0a;
+      --muted: #475569;
+      --card-bg: #f7f7f9;
+      --thead-bg: #f8fafc;
+      --border: #e5e7eb;
+    }
+    :root[data-theme="dark"] {
+      --bg: #0b1220;
+      --text: #e5e7eb;
+      --muted: #9aa7bd;
+      --card-bg: #141b2d;
+      --thead-bg: #1a2337;
+      --border: #243046;
+    }
+
+    /* Table visuals (now using variables) */
+    .table-wrap{overflow:auto;background:var(--card-bg);border-radius:12px;border:1px solid var(--border)}
     table{width:100%;border-collapse:separate;border-spacing:0;min-width:880px}
-    th,td{padding:10px 12px;border-bottom:1px solid #f1f5f9;text-align:left;white-space:nowrap}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;color:var(--text)}
     th{font-weight:700;cursor:pointer}
-    thead th{position:sticky;top:0;background:#f8fafc}
+    thead th{position:sticky;top:0;background:var(--thead-bg)}
     .badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:12px}
+
+    /* You can keep these badge colors as-is, or also theme-ize if desired */
     .b-green{background:#dcfce7;color:#166534}
     .b-slate{background:#e2e8f0;color:#0f172a}
     .b-amber{background:#fef3c7;color:#92400e}
+
     .controls{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-    .controls input,.controls select{padding:8px 10px;border:1px solid #e5e7eb;border-radius:10px}
-    .disclaimer{font-size:12px;color:#475569;margin-top:10px}
-    .rank{font-weight:800}
+    .controls input,.controls select{padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text)}
+    .disclaimer{font-size:12px;color:var(--muted);margin-top:10px}
+
+    /* Theme toggle button (icon only; position via header layout) */
+    .theme-toggle{
+      border:1px solid var(--border);
+      background:transparent;
+      color:var(--text);
+      border-radius:8px;
+      padding:6px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+    .theme-toggle .sun{display:inline-block}
+    .theme-toggle .moon{display:none}
+    :root[data-theme="dark"] .theme-toggle .sun{display:none}
+    :root[data-theme="dark"] .theme-toggle .moon{display:inline-block}
   </style>
+
+  <script>
+    /* Apply saved theme ASAP to avoid flash before CSS paints */
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+      } catch (e) {}
+    })();
+  </script>
 </head>
+
 <body>
-<header class="app-header">
-  <div class="container">
-    <h1>Crypto Card Rankings</h1>
-    <p class="subtitle">Compare crypto cards (dummy data for now)</p>
+  <header class="app-header">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <h1>Crypto Card Rankings</h1>
+        <p class="subtitle">Compare crypto cards (dummy data for now)</p>
+        <div class="nav-links">
+          <a href="index.html">FAQ</a>
+          <a href="cards.html" aria-current="page">Crypto Cards</a>
+        </div>
+      </div>
 
-    <!-- 既存ページと同じ並びの簡易ナビ -->
-    <div class="nav-links">
-      <a href="index.html">FAQ</a>
-      <a href="cards.html" aria-current="page">Crypto Cards</a>
+    <!-- Theme toggle (same feel as index) -->
+     <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Toggle theme">
+        <span class="theme-emoji" aria-hidden="true"></span>
+    </button>
     </div>
 
-    <!-- コントロール -->
-    <div class="controls">
-      <input id="q" type="search" placeholder="Search card / issuer / network…" />
-      <select id="region">
-        <option value="">All regions</option>
-        <option value="AU">Australia (AU)</option>
-        <option value="JP">Japan (JP)</option>
-        <option value="EU">Europe (EU)</option>
-        <option value="US">United States (US)</option>
-        <option value="Global">Global</option>
-      </select>
-      <select id="sort">
-        <option value="score:desc">Sort: Score (high→low)</option>
-        <option value="rewards:desc">Rewards % (high→low)</option>
-        <option value="fxFee:asc">FX fee % (low→high)</option>
-        <option value="atmFee:asc">ATM fee $ (low→high)</option>
-        <option value="monthlyFee:asc">Monthly fee $ (low→high)</option>
-      </select>
+    <div class="container">
+      <div class="controls">
+        <input id="q" type="search" placeholder="Search card / issuer / network…" />
+        <select id="region">
+          <option value="">All regions</option>
+          <option value="AU">Australia (AU)</option>
+          <option value="JP">Japan (JP)</option>
+          <option value="EU">Europe (EU)</option>
+          <option value="US">United States (US)</option>
+          <option value="Global">Global</option>
+        </select>
+        <select id="sort">
+          <option value="score:desc">Sort: Score (high→low)</option>
+          <option value="rewards:desc">Rewards % (high→low)</option>
+          <option value="fxFee:asc">FX fee % (low→high)</option>
+          <option value="atmFee:asc">ATM fee $ (low→high)</option>
+          <option value="monthlyFee:asc">Monthly fee $ (low→high)</option>
+        </select>
+      </div>
+      <div id="meta" class="result-meta"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="table-wrap">
+      <table id="cards-table" aria-describedby="meta">
+        <thead>
+          <tr>
+            <th data-k="rank">#</th>
+            <th data-k="name">Card</th>
+            <th data-k="network">Network</th>
+            <th data-k="rewards">Rewards %</th>
+            <th data-k="fxFee">FX fee %</th>
+            <th data-k="atmFee">ATM $</th>
+            <th data-k="monthlyFee">Monthly $</th>
+            <th data-k="stakingRequired">Staking</th>
+            <th data-k="regions">Regions</th>
+            <th data-k="score">Score</th>
+            <th data-k="links">Links</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
     </div>
 
-    <div id="meta" class="result-meta"></div>
-  </div>
-</header>
+    <p class="disclaimer">
+      DISCLAIMER: Example data for development. Not financial advice. Terms change frequently — always verify on the official issuer page and check availability in your country.
+    </p>
+  </main>
 
-<main class="container">
-  <div class="table-wrap">
-    <table id="cards-table" aria-describedby="meta">
-      <thead>
-        <tr>
-          <th data-k="rank">#</th>
-          <th data-k="name">Card</th>
-          <th data-k="network">Network</th>
-          <th data-k="rewards">Rewards %</th>
-          <th data-k="fxFee">FX fee %</th>
-          <th data-k="atmFee">ATM $</th>
-          <th data-k="monthlyFee">Monthly $</th>
-          <th data-k="stakingRequired">Staking</th>
-          <th data-k="regions">Regions</th>
-          <th data-k="score">Score</th>
-          <th data-k="links">Links</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+  <footer class="app-footer">
+    <div class="container">
+      <small><span id="updatedAt">Updated: —</span></small>
+    </div>
+  </footer>
 
-  <p class="disclaimer">
-    DISCLAIMER: Example data for development. Not financial advice. Terms change frequently — always verify on the official issuer page and check availability in your country.
-  </p>
-</main>
+    <script>
+    /* ---- Dummy data & rendering (unchanged logic) ---- */
+    const CARDS = [
+      { id:"cdc", name:"Crypto.com Visa (Example)", issuer:"Crypto.com", regions:["Global","AU","JP","EU","US"], rewardsRate:60, monthlyFee:0, fxFee:0.5, atmFee:3, stakingRequired:true, network:"Visa", docsUrl:"https://crypto.com/cards", affiliateUrl:"" },
+      { id:"binance", name:"Binance Card (Example)", issuer:"Binance", regions:["EU"], rewardsRate:55, monthlyFee:0, fxFee:0.9, atmFee:2.5, stakingRequired:false, network:"Visa", docsUrl:"https://www.binance.com", affiliateUrl:"" },
+      { id:"bitget", name:"Bitget Card (Example)", issuer:"Bitget", regions:["EU","Global"], rewardsRate:50, monthlyFee:0, fxFee:1.0, atmFee:2.9, stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bitget.com", affiliateUrl:"" },
+      { id:"bybit", name:"Bybit Card (Example)", issuer:"Bybit", regions:["EU","Global"], rewardsRate:48, monthlyFee:0, fxFee:1.2, atmFee:3.5, stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bybit.com", affiliateUrl:"" }
+    ];
 
-<footer class="app-footer">
-  <div class="container">
-    <small><span id="updatedAt">Updated: —</span></small>
-  </div>
-</footer>
+    const WEIGHTS = { rewards:0.45, fees:0.35, availability:0.15, convenience:0.05 };
 
-<script>
-/** ---- ダミーデータ（後で実データに差し替え） ---- */
-const CARDS = [
-  {
-    id: "cdc",
-    name: "Crypto.com Visa (Example)",
-    issuer: "Crypto.com",
-    regions: ["Global","AU","JP","EU","US"],
-    rewardsRate: 60,
-    monthlyFee: 0,
-    fxFee: 0.5,
-    atmFee: 3,
-    stakingRequired: true,
-    network: "Visa",
-    docsUrl: "https://crypto.com/cards",
-    affiliateUrl: ""
-  },
-  {
-    id: "binance",
-    name: "Binance Card (Example)",
-    issuer: "Binance",
-    regions: ["EU"],
-    rewardsRate: 55,
-    monthlyFee: 0,
-    fxFee: 0.9,
-    atmFee: 2.5,
-    stakingRequired: false,
-    network: "Visa",
-    docsUrl: "https://www.binance.com",
-    affiliateUrl: ""
-  },
-  {
-    id: "bitget",
-    name: "Bitget Card (Example)",
-    issuer: "Bitget",
-    regions: ["EU","Global"],
-    rewardsRate: 50,
-    monthlyFee: 0,
-    fxFee: 1.0,
-    atmFee: 2.9,
-    stakingRequired: false,
-    network: "Mastercard",
-    docsUrl: "https://www.bitget.com",
-    affiliateUrl: ""
-  },
-  {
-    id: "bybit",
-    name: "Bybit Card (Example)",
-    issuer: "Bybit",
-    regions: ["EU","Global"],
-    rewardsRate: 48,
-    monthlyFee: 0,
-    fxFee: 1.2,
-    atmFee: 3.5,
-    stakingRequired: false,
-    network: "Mastercard",
-    docsUrl: "https://www.bybit.com",
-    affiliateUrl: ""
-  }
-];
+    function score(c){
+      const rewardsScore = c.rewardsRate;                           // 0–100
+      const feeScore = Math.max(0, 100 - (c.fxFee*20 + c.atmFee*10 + c.monthlyFee*15));
+      const availability = Math.min(100, c.regions.length * 20);
+      const convenience = 100 - (c.stakingRequired ? 30 : 0);
+      const total =
+        rewardsScore*WEIGHTS.rewards +
+        feeScore*WEIGHTS.fees +
+        availability*WEIGHTS.availability +
+        convenience*WEIGHTS.convenience;
+      return Math.round(total);
+    }
 
-/** ---- スコア算出（簡易版） ---- */
-const WEIGHTS = { rewards: 0.45, fees: 0.35, availability: 0.15, convenience: 0.05 };
-function score(c){
-  const rewardsScore = c.rewardsRate; // 0-100想定
-  const feeScore = Math.max(0, 100 - (c.fxFee*20 + c.atmFee*10 + c.monthlyFee*15));
-  const availability = Math.min(100, c.regions.length * 20);
-  const convenience = 100 - (c.stakingRequired ? 30 : 0);
-  const total =
-    rewardsScore*WEIGHTS.rewards +
-    feeScore*WEIGHTS.fees +
-    availability*WEIGHTS.availability +
-    convenience*WEIGHTS.convenience;
-  return Math.round(total);
-}
+    const qEl = document.getElementById("q");
+    const regionEl = document.getElementById("region");
+    const sortEl = document.getElementById("sort");
+    const tbody = document.getElementById("tbody");
+    const meta = document.getElementById("meta");
+    const updatedAt = document.getElementById("updatedAt");
 
-/** ---- 描画 ---- */
-const qEl = document.getElementById("q");
-const regionEl = document.getElementById("region");
-const sortEl = document.getElementById("sort");
-const tbody = document.getElementById("tbody");
-const meta = document.getElementById("meta");
-const updatedAt = document.getElementById("updatedAt");
+    function render(){
+      const q = (qEl.value || "").toLowerCase().trim();
+      const region = regionEl.value;
 
-function render(){
-  const q = (qEl.value || "").toLowerCase().trim();
-  const region = regionEl.value;
+      let rows = CARDS.map(c => ({...c, _score: score(c)}))
+        .filter(c => {
+          const matchesQ = !q || (c.name + " " + c.issuer + " " + c.network).toLowerCase().includes(q);
+          const matchesRegion = !region || c.regions.includes(region);
+          return matchesQ && matchesRegion;
+        });
 
-  let rows = CARDS.map(c => ({...c, _score: score(c)}))
-    .filter(c => {
-      const matchesQ = !q || (c.name + " " + c.issuer + " " + c.network).toLowerCase().includes(q);
-      const matchesRegion = !region || c.regions.includes(region);
-      return matchesQ && matchesRegion;
-    });
+      const [key, dir] = sortEl.value.split(":"); // e.g. "score:desc"
+      rows.sort((a,b)=>{
+        const va = key==="rewards" ? a.rewardsRate : (a[key] ?? a._score);
+        const vb = key==="rewards" ? b.rewardsRate : (b[key] ?? b._score);
+        return dir==="asc" ? (va - vb) : (vb - va);
+      });
 
-  const [key, dir] = sortEl.value.split(":"); // e.g. "score:desc"
-  rows.sort((a,b)=>{
-    const va = key==="rewards"?a.rewardsRate:a[key]??a._score;
-    const vb = key==="rewards"?b.rewardsRate:b[key]??b._score;
-    return dir==="asc" ? (va - vb) : (vb - va);
-  });
+      tbody.innerHTML = "";
+      rows.forEach((c, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="rank">${i+1}</td>
+          <td>${c.name}<br><small>${c.issuer}</small></td>
+          <td><span class="badge b-slate">${c.network}</span></td>
+          <td>${c.rewardsRate}%</td>
+          <td>${c.fxFee}%</td>
+          <td>$${c.atmFee}</td>
+          <td>$${c.monthlyFee}</td>
+          <td>${c.stakingRequired ? '<span class="badge b-amber">Yes</span>' : '<span class="badge b-green">No</span>'}</td>
+          <td>${c.regions.join(", ")}</td>
+          <td><span class="badge b-green">${c._score}</span></td>
+          <td>
+            ${c.affiliateUrl ? `<a href="${c.affiliateUrl}" target="_blank" rel="noreferrer">Apply</a> · ` : ""}
+            <a href="${c.docsUrl}" target="_blank" rel="noreferrer">Official</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-  // 再度ランキング番号を振る
-  tbody.innerHTML = "";
-  rows.forEach((c, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="rank">${i+1}</td>
-      <td>${c.name}<br><small>${c.issuer}</small></td>
-      <td><span class="badge b-slate">${c.network}</span></td>
-      <td>${c.rewardsRate}%</td>
-      <td>${c.fxFee}%</td>
-      <td>$${c.atmFee}</td>
-      <td>$${c.monthlyFee}</td>
-      <td>${c.stakingRequired ? '<span class="badge b-amber">Yes</span>' : '<span class="badge b-green">No</span>'}</td>
-      <td>${c.regions.join(", ")}</td>
-      <td><span class="badge b-green">${c._score}</span></td>
-      <td>
-        ${c.affiliateUrl ? `<a href="${c.affiliateUrl}" target="_blank" rel="noreferrer">Apply</a> · ` : ""}
-        <a href="${c.docsUrl}" target="_blank" rel="noreferrer">Official</a>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
+      meta.textContent = `${rows.length} card(s) · Sorted by ${key} (${dir})`;
+      updatedAt.textContent = "Updated: " + new Date().toISOString().slice(0,10);
+    }
 
-  meta.textContent = `${rows.length} card(s) · Sorted by ${key} (${dir})`;
-}
+    [qEl, regionEl, sortEl].forEach(el => el.addEventListener("input", render));
+    render();
+  </script>
 
-[qEl, regionEl, sortEl].forEach(el => el.addEventListener("input", render));
-render();
-updatedAt.textContent = "Updated: " + new Date().toISOString().slice(0,10);
-</script>
+  <!-- ✅ theme.js は JS ブロックの外。必ず </body> の直前で 1 回だけ -->
+  <script src="theme.js"></script>
 </body>
 </html>
+
 
