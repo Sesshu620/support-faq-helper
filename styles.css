@@ -52,10 +52,11 @@ html, body {
 }
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 1400px;   /* default might be 960px or 1200px */
+  margin: 0 auto;      /* keep centered */
+  padding: 0 16px;     /* keep some side padding */
 }
+
 
 h1 {
   margin: 0 0 6px;
@@ -296,3 +297,11 @@ kbd {
 
 /* DARK = moon */
 :root[data-theme="dark"] .theme-emoji::before{ content:"🌙"; }
+
+/* Make Card column wider */
+th:nth-child(2),
+td:nth-child(2) {
+  min-width: 300px;   /* adjust this value: 280px / 320px etc */
+  max-width: 400px;   /* optional: keep it from growing too wide */
+  white-space: normal;   /* allow wrapping */
+}

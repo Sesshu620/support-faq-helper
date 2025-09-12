@@ -27,12 +27,48 @@
     }
 
     /* Table visuals (now using variables) */
-    .table-wrap{overflow:auto;background:var(--card-bg);border-radius:12px;border:1px solid var(--border)}
-    table{width:100%;border-collapse:separate;border-spacing:0;min-width:880px}
-    th,td{padding:10px 12px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap;color:var(--text)}
-    th{font-weight:700;cursor:pointer}
-    thead th{position:sticky;top:0;background:var(--thead-bg)}
-    .badge{display:inline-block;padding:2px 8px;border-radius:9999px;font-size:12px}
+/* Make the table fit the viewport without horizontal scroll */
+.table-wrap{
+  overflow-x: hidden;                /* no horizontal scroll */
+  background: var(--card-bg);
+  border-radius:12px;
+  border:1px solid var(--border);
+}
+
+/* Let the table shrink to container; allow wrapping */
+table{
+  width:100%;
+  min-width:0;                       /* remove previous 880px constraint */
+  table-layout: fixed;               /* cells share width and wrap inside */
+  border-collapse:separate;
+  border-spacing:0;
+}
+
+/* Allow text to wrap inside cells */
+th, td{
+  padding:10px 12px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  white-space: normal;               /* was nowrap */
+  overflow-wrap: anywhere;           /* wrap long tokens (URLs, long words) */
+  word-break: break-word;
+  color:var(--text);
+}
+
+th{ font-weight:700; cursor:pointer; }
+thead th{ position:sticky; top:0; background:var(--thead-bg); }
+
+/* Slightly reserve width for some narrow columns to keep layout tidy */
+th:nth-child(1), td:nth-child(1){ width: 44px; }      /* # rank */
+th:nth-child(3), td:nth-child(3){ width: 110px; }     /* Network badge */
+th:nth-child(10), td:nth-child(10){ width: 90px; }    /* Score badge */
+
+/* Keep purely numeric cells on one line if you prefer */
+td:nth-child(4),
+td:nth-child(5),
+td:nth-child(6),
+td:nth-child(7){ white-space: nowrap; }  /* Rewards/FX/ATM/Monthly */
+
 
     /* You can keep these badge colors as-is, or also theme-ize if desired */
     .b-green{background:#dcfce7;color:#166534}
