@@ -184,12 +184,13 @@ td:nth-child(7){ white-space: nowrap; }  /* Rewards/FX/ATM/Monthly */
 
     <script>
     /* ---- Dummy data & rendering (unchanged logic) ---- */
-    const CARDS = [
-      { id:"cdc", name:"Crypto.com Visa (Example)", issuer:"Crypto.com", regions:["Global","AU","JP","EU","US"], rewardsRate:60, monthlyFee:0, fxFee:0.5, atmFee:3, stakingRequired:true, network:"Visa", docsUrl:"https://crypto.com/cards", affiliateUrl:"" },
-      { id:"binance", name:"Binance Card (Example)", issuer:"Binance", regions:["EU"], rewardsRate:55, monthlyFee:0, fxFee:0.9, atmFee:2.5, stakingRequired:false, network:"Visa", docsUrl:"https://www.binance.com", affiliateUrl:"" },
-      { id:"bitget", name:"Bitget Card (Example)", issuer:"Bitget", regions:["EU","Global"], rewardsRate:50, monthlyFee:0, fxFee:1.0, atmFee:2.9, stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bitget.com", affiliateUrl:"" },
-      { id:"bybit", name:"Bybit Card (Example)", issuer:"Bybit", regions:["EU","Global"], rewardsRate:48, monthlyFee:0, fxFee:1.2, atmFee:3.5, stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bybit.com", affiliateUrl:"" }
-    ];
+   /* ---- Crypto Cards dataset (clean rebuild) ----
+   NOTE:
+   - Numbers for some new cards are seed values; verify on the official pages.
+   - Keep `id` unique. */
+   
+ 
+
 
     const WEIGHTS = { rewards:0.45, fees:0.35, availability:0.15, convenience:0.05 };
 
@@ -261,9 +262,16 @@ td:nth-child(7){ white-space: nowrap; }  /* Rewards/FX/ATM/Monthly */
     render();
   </script>
 
-  <!-- ✅ theme.js は JS ブロックの外。必ず </body> の直前で 1 回だけ -->
-  <script src="theme.js"></script>
+<!-- data → 受け取り(長さログ) → 描画ロジック → テーマ -->
+<script src="./cards-data.js?v=fix3"></script>
+<script>window.addEventListener('load',()=>console.log('HTML sees window.CARDS:', Array.isArray(window.CARDS)?window.CARDS.length:window.CARDS));</script>
+<script src="./cards.js?v=fix3"></script>
+<script src="./theme.js?v=fix3"></script>
 </body>
 </html>
+
+
+
+
 
 
