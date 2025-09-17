@@ -1,41 +1,50 @@
-// cards-data.js — data only (no other code)
-window.CARDS = [
-  { id:"cdc", name:"Crypto.com Visa (Example)", issuer:"Crypto.com",
-    regions:["Global","AU","JP","EU","US"], rewardsRate:60, monthlyFee:0, fxFee:0.5, atmFee:3,
-    stakingRequired:true, network:"Visa", docsUrl:"https://crypto.com/cards", affiliateUrl:"" },
-  { id:"binance", name:"Binance Card (Example)", issuer:"Binance",
-    regions:["EU"], rewardsRate:55, monthlyFee:0, fxFee:0.9, atmFee:2.5,
-    stakingRequired:false, network:"Visa", docsUrl:"https://www.binance.com", affiliateUrl:"" },
-  { id:"bitget", name:"Bitget Card (Example)", issuer:"Bitget",
-    regions:["EU","Global"], rewardsRate:50, monthlyFee:0, fxFee:1.0, atmFee:2.9,
-    stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bitget.com", affiliateUrl:"" },
-  { id:"bybit", name:"Bybit Card (Example)", issuer:"Bybit",
-    regions:["EU","Global"], rewardsRate:48, monthlyFee:0, fxFee:1.2, atmFee:3.5,
-    stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bybit.com", affiliateUrl:"" },
-  { id:"wirex", name:"Wirex Card", issuer:"Wirex",
-    regions:["Global","AU","EU","UK"], rewardsRate:8, monthlyFee:0, fxFee:1.0, atmFee:2.25,
-    stakingRequired:false, network:"Visa", docsUrl:"https://wirexapp.com", affiliateUrl:"" },
-  { id:"coinjar", name:"CoinJar Card", issuer:"CoinJar",
-    regions:["AU","UK"], rewardsRate:1, monthlyFee:0, fxFee:2.99, atmFee:1,
-    stakingRequired:false, network:"Mastercard", docsUrl:"https://www.coinjar.com/card", affiliateUrl:"" },
-  { id:"kast", name:"KAST Cards", issuer:"KAST",
-    regions:["US","EU","UK"], rewardsRate:2, monthlyFee:0, fxFee:2.0, atmFee:3,
-    stakingRequired:false, network:"Visa", docsUrl:"https://www.kast.io/", affiliateUrl:"" },
-  { id:"basedapp", name:"BasedApp Visa", issuer:"BasedApp",
-    regions:["Global"], rewardsRate:1, monthlyFee:0, fxFee:1.0, atmFee:3,
-    stakingRequired:false, network:"Visa", docsUrl:"https://www.basedapp.io/", affiliateUrl:"" },
-  { id:"gnosis_pay", name:"Gnosis Pay Card", issuer:"Gnosis Pay",
-    regions:["EU","EEA","UK"], rewardsRate:0, monthlyFee:0, fxFee:0.5, atmFee:0,
-    stakingRequired:false, network:"Visa", docsUrl:"https://gnosispay.com/", affiliateUrl:"" },
-  { id:"etherfi_cash", name:"ether.fi Cash Card", issuer:"ether.fi",
-    regions:["US","EU","UK"], rewardsRate:2, monthlyFee:0, fxFee:0.5, atmFee:2,
-    stakingRequired:false, network:"Visa", docsUrl:"https://www.ether.fi/cash", affiliateUrl:"" },
-  { id:"solayer", name:"Solayer Emerald", issuer:"Solayer",
-    regions:["EU","UK","US"], rewardsRate:1, monthlyFee:0, fxFee:1.0, atmFee:3,
-    stakingRequired:false, network:"Visa", docsUrl:"https://www.solayer.xyz/emerald", affiliateUrl:"" },
-  { id:"metamask", name:"MetaMask Card", issuer:"MetaMask",
-    regions:["US","EU","UK"], rewardsRate:0, monthlyFee:0, fxFee:0.5, atmFee:2,
-    stakingRequired:false, network:"Mastercard", docsUrl:"https://metamask.io/card", affiliateUrl:"" }
-];
-// Debug（一時的）
-console.log('cards-data loaded:', window.CARDS.length);
+// cards-data.js
+;(function () {
+  // ここで必ず window に載せる
+
+  // cards-data.js — data only (no other code)
+  window.CARDS = [
+    { id:"cdc", name:"Crypto.com Visa (Example)", issuer:"Crypto.com",
+      regions:["Global","AU","JP","EU","US"], rewardsRate:60, monthlyFee:0, fxFee:0.5, atmFee:3,
+      stakingRequired:true, network:"Visa", docsUrl:"https://crypto.com/cards", affiliateUrl:"" },
+    { id:"binance", name:"Binance Card (Example)", issuer:"Binance",
+      regions:["EU"], rewardsRate:55, monthlyFee:0, fxFee:0.9, atmFee:2.5,
+      stakingRequired:false, network:"Visa", docsUrl:"https://www.binance.com", affiliateUrl:"" },
+    { id:"bitget", name:"Bitget Card (Example)", issuer:"Bitget",
+      regions:["EU","Global"], rewardsRate:50, monthlyFee:0, fxFee:1.0, atmFee:2.9,
+      stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bitget.com", affiliateUrl:"" },
+    { id:"bybit", name:"Bybit Card (Example)", issuer:"Bybit",
+      regions:["EU","Global"], rewardsRate:48, monthlyFee:0, fxFee:1.2, atmFee:3.5,
+      stakingRequired:false, network:"Mastercard", docsUrl:"https://www.bybit.com", affiliateUrl:"" },
+    { id:"wirex", name:"Wirex Card", issuer:"Wirex",
+      regions:["Global","AU","EU","UK"], rewardsRate:8, monthlyFee:0, fxFee:1.0, atmFee:2.25,
+      stakingRequired:false, network:"Visa", docsUrl:"https://wirexapp.com", affiliateUrl:"" },
+    { id:"coinjar", name:"CoinJar Card", issuer:"CoinJar",
+      regions:["AU","UK"], rewardsRate:1, monthlyFee:0, fxFee:2.99, atmFee:1,
+      stakingRequired:false, network:"Mastercard", docsUrl:"https://www.coinjar.com/card", affiliateUrl:"" },
+    { id:"kast", name:"KAST Cards", issuer:"KAST",
+      regions:["US","EU","UK"], rewardsRate:2, monthlyFee:0, fxFee:2.0, atmFee:3,
+      stakingRequired:false, network:"Visa", docsUrl:"https://www.kast.io/", affiliateUrl:"" },
+    { id:"basedapp", name:"BasedApp Visa", issuer:"BasedApp",
+      regions:["Global"], rewardsRate:1, monthlyFee:0, fxFee:1.0, atmFee:3,
+      stakingRequired:false, network:"Visa", docsUrl:"https://www.basedapp.io/", affiliateUrl:"" },
+    { id:"gnosis_pay", name:"Gnosis Pay Card", issuer:"Gnosis Pay",
+      regions:["EU","EEA","UK"], rewardsRate:0, monthlyFee:0, fxFee:0.5, atmFee:0,
+      stakingRequired:false, network:"Visa", docsUrl:"https://gnosispay.com/", affiliateUrl:"" },
+    { id:"etherfi_cash", name:"ether.fi Cash Card", issuer:"ether.fi",
+      regions:["US","EU","UK"], rewardsRate:2, monthlyFee:0, fxFee:0.5, atmFee:2,
+      stakingRequired:false, network:"Visa", docsUrl:"https://www.ether.fi/cash", affiliateUrl:"" },
+    { id:"solayer", name:"Solayer Emerald", issuer:"Solayer",
+      regions:["EU","UK","US"], rewardsRate:1, monthlyFee:0, fxFee:1.0, atmFee:3,
+      stakingRequired:false, network:"Visa", docsUrl:"https://www.solayer.xyz/emerald", affiliateUrl:"" },
+    { id:"metamask", name:"MetaMask Card", issuer:"MetaMask",
+      regions:["US","EU","UK"], rewardsRate:0, monthlyFee:0, fxFee:0.5, atmFee:2,
+      stakingRequired:false, network:"Mastercard", docsUrl:"https://metamask.io/card", affiliateUrl:"" }
+  ];
+  
+  // データ読み込み完了をイベントで通知
+  window.dispatchEvent(new Event('cards-data-ready'));
+  
+  // デバッグ用ログ
+  console.log('[cards-data] loaded. CARDS length =', Array.isArray(window.CARDS) ? window.CARDS.length : 'N/A');
+})();

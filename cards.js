@@ -1,76 +1,71 @@
-// cards.js
-const WEIGHTS = { rewards:0.45, fees:0.35, availability:0.15, convenience:0.05 };
-
-function score(c){
-  const rewardsScore = c.rewardsRate;
-  const feeScore = Math.max(0, 100 - (c.fxFee*20 + c.atmFee*10 + c.monthlyFee*15));
-  const availability = Math.min(100, c.regions.length * 20);
-  const convenience = 100 - (c.stakingRequired ? 30 : 0);
-  return Math.round(
-    rewardsScore*WEIGHTS.rewards +
-    feeScore*WEIGHTS.fees +
-    availability*WEIGHTS.availability +
-    convenience*WEIGHTS.convenience
-  );
-}
-
-const qEl       = document.getElementById("q");
-const regionEl  = document.getElementById("region");
-const sortEl    = document.getElementById("sort");
-const tbody     = document.getElementById("tbody");
-const meta      = document.getElementById("meta");
-const updatedAt = document.getElementById("updatedAt");
-
-// 重要：window.CARDS から受け取る（新しく作らない）
-const CARDS = window.CARDS || [];
-console.log("cards.js sees:", Array.isArray(CARDS) ? CARDS.length : CARDS);
-
-function render(){
-  if (!Array.isArray(CARDS) || CARDS.length === 0) {
-    tbody.innerHTML = "";
-    meta.textContent = "0 card(s) · No data loaded";
-    updatedAt.textContent = "Updated: —";
+// cards.js - 完全にクリーンなバージョン
+(function () {
+  'use strict';
+  
+  console.log('[cards.js] Starting initialization...');
+  
+  // 多重初期化ガード
+  if (window.__CARDS_JS_LOADED) {
+    console.warn('[cards.js] Already loaded, skipping...');
     return;
   }
-  const q = (qEl?.value || "").toLowerCase().trim();
-  const region = regionEl?.value || "";
+  window.__CARDS_JS_LOADED = true;
 
-  let rows = CARDS.map(c => ({...c, _score: score(c)}))
-    .filter(c => (!q || (c.name + " " + c.issuer + " " + c.network).toLowerCase().includes(q)) &&
-                 (!region || c.regions.includes(region)));
+  // render関数を定義
+  function render() {
+    console.log('[render] Called');
+    console.log('[render] window.CARDS:', window.CARDS);
+    console.log('[render] typeof window.CARDS:', typeof window.CARDS);
+    console.log('[render] Array.isArray(window.CARDS):', Array.isArray(window.CARDS));
+    
+    // データを安全に取得
+    const data = (Array.isArray(window.CARDS) && window.CARDS.length > 0) ? window.CARDS : [];
+    
+    console.log('[render] Processing data, length:', data.length);
+    
+    if (data.length === 0) {
+      console.warn('[render] No data available');
+      return;
+    }
 
-  const [key, dir] = (sortEl?.value || "score:desc").split(":");
-  rows.sort((a,b)=>{
-    const va = key==="rewards" ? a.rewardsRate : (a[key] ?? a._score);
-    const vb = key==="rewards" ? b.rewardsRate : (b[key] ?? b._score);
-    return dir==="asc" ? (va - vb) : (vb - va);
-  });
+    // テーブルの tbody を取得
+    const tbody = document.getElementById('tbody');
+    if (!tbody) {
+      console.error('[render] tbody element not found');
+      return;
+    }
 
-  tbody.innerHTML = "";
-  rows.forEach((c, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td class="rank">${i+1}</td>
-      <td>${c.name}<br><small>${c.issuer}</small></td>
-      <td><span class="badge b-slate">${c.network}</span></td>
-      <td>${c.rewardsRate}%</td>
-      <td>${c.fxFee}%</td>
-      <td>$${c.atmFee}</td>
-      <td>$${c.monthlyFee}</td>
-      <td>${c.stakingRequired ? '<span class="badge b-amber">Yes</span>' : '<span class="badge b-green">No</span>'}</td>
-      <td>${c.regions.join(", ")}</td>
-      <td><span class="badge b-green">${c._score}</span></td>
-      <td><a href="${c.docsUrl}" target="_blank" rel="noreferrer">Official</a></td>
-    `;
-    tbody.appendChild(tr);
-  });
+    console.log('[render] Rendering to tbody...');
+    
+    // テーブル行を生成
+    const rows = data.map((card, index) => {
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${card.name || ''}</td>
+          <td>${card.network || ''}</td>
+          <td>${card.rewardsRate || 0}%</td>
+          <td>${card.fxFee || 0}%</td>
+          <td>$${card.atmFee || 0}</td>
+          <td>$${card.monthlyFee || 0}</td>
+          <td>${card.stakingRequired ? 'Yes' : 'No'}</td>
+          <td>${Array.isArray(card.regions) ? card.regions.join(', ') : (card.regions || '')}</td>
+          <td>${card.rewardsRate || 0}</td>
+          <td>${card.docsUrl ? `<a href="${card.docsUrl}" target="_blank" rel="noopener">View</a>` : ''}</td>
+        </tr>
+      `;
+    }).join('');
 
-  meta.textContent = `${rows.length} card(s) · Sorted by ${key} (${dir})`;
-  updatedAt.textContent = "Updated: " + new Date().toISOString().slice(0,10);
-}
+    tbody.innerHTML = rows;
+    console.log('[render] Successfully rendered', data.length, 'cards');
+  }
 
-[qEl, regionEl, sortEl].forEach(el => el && el.addEventListener("input", render));
-render();
+  // グローバルに公開
+  window.render = render;
+  
+  console.log('[cards.js] Initialization complete. render function available.');
+})(); 
+
 
 
 
