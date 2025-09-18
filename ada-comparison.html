@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardano ADA Price Comparison - Buy at Best Price</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .ada-info {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .ada-price {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0f4c75;
+        }
+
+        .last-update {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .controls {
+            padding: 20px 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .exchange-grid {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .exchange-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exchange-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .exchange-card.best-price {
+            border-color: #28a745;
+            background: linear-gradient(135deg, #f8fff9, #e8f5e8);
+        }
+
+        .exchange-card.best-price::before {
+            content: "🏆 Best Price";
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .exchange-card {
+            position: relative;
+        }
+
+        .exchange-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .exchange-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-right: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .exchange-name {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .price-info {
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 2em;
+            font-weight: bold;
+            color: #0f4c75;
+            margin-bottom: 5px;
+        }
+
+        .price-jpy {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .exchange-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .exchange-features li {
+            padding: 5px 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .exchange-features li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .visit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0f4c75, #3282b8);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .visit-btn:hover {
+            background: linear-gradient(135deg, #0a3a5c, #2a6b99);
+            transform: translateY(-2px);
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            color: #856404;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .ada-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+            
+            .exchange-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💎 Cardano ADA Price Comparison</h1>
+            <p>Find the best exchange to buy ADA at the lowest price</p>
+        </div>
+
+        <div class="ada-info">
+            <div>
+                <div class="ada-price" id="currentPrice">Loading...</div>
+                <div class="price-jpy" id="currentPriceJpy">JPY equivalent: Calculating...</div>
+            </div>
+            <div class="last-update" id="lastUpdate">Last updated: --:--</div>
+        </div>
+
+        <div class="controls">
+            <button class="refresh-btn" id="refreshBtn">🔄 Refresh Prices</button>
+            <div class="loading" id="loading">Fetching data...</div>
+        </div>
+
+        <div class="exchange-grid" id="exchangeGrid">
+            <!-- Exchange cards will be dynamically generated here -->
+        </div>
+
+        <div class="disclaimer">
+            <strong>⚠️ Disclaimer:</strong>
+            The prices displayed are for reference only. Please verify actual trading prices on each exchange. Cryptocurrency trading involves high risk. Invest responsibly and at your own risk.
+        </div>
+    </div>
+
+    <script>
+        // Exchange data (demo)
+        const exchanges = [
+            {
+                name: 'Binance',
+                logo: 'BN',
+                features: ['World\'s largest trading volume', 'Low trading fees', 'Wide variety of trading pairs'],
+                url: 'https://www.binance.com'
+            },
+            {
+                name: 'Coinbase',
+                logo: 'CB',
+                features: ['Beginner-friendly', 'High security standards', 'Regulatory compliant'],
+                url: 'https://www.coinbase.com'
+            },
+            {
+                name: 'Kraken',
+                logo: 'KR',
+                features: ['Established exchange', 'Advanced trading features', 'Strong security'],
+                url: 'https://www.kraken.com'
+            },
+            {
+                name: 'Bittrex',
+                logo: 'BT',
+                features: ['Rich altcoin selection', 'API support', '24/7 customer support'],
+                url: 'https://bittrex.com'
+            },
+            {
+                name: 'ByBit',
+                logo: 'BB',
+                features: ['Derivatives trading', 'High liquidity', 'Mobile app available'],
+                url: 'https://www.bybit.com'
+            },
+            {
+                name: 'KuCoin',
+                logo: 'KC',
+                features: ['Diverse token selection', 'Staking supported', 'Trading bonuses'],
+                url: 'https://www.kucoin.com'
+            }
+        ];
+
+        // JPY conversion rate (demo fixed value)
+        const USDJPY_RATE = 150;
+
+        let currentPrices = [];
+
+        // Generate random price (substitute for actual API)
+        function generateRandomPrice(basePrice = 0.45) {
+            const variation = 0.02; // ±2% variation
+            const randomFactor = 1 + (Math.random() - 0.5) * 2 * variation;
+            return (basePrice * randomFactor).toFixed(4);
+        }
+
+        // Update price data
+        function updatePrices() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const loading = document.getElementById('loading');
+            
+            refreshBtn.disabled = true;
+            loading.style.display = 'inline';
+
+            // Simulated API call
+            setTimeout(() => {
+                // Generate price for each exchange
+                currentPrices = exchanges.map((exchange, index) => ({
+                    ...exchange,
+                    price: generateRandomPrice(0.45 + index * 0.001),
+                    priceJpy: null
+                }));
+
+                // Calculate JPY prices
+                currentPrices.forEach(exchange => {
+                    exchange.priceJpy = (parseFloat(exchange.price) * USDJPY_RATE).toFixed(2);
+                });
+
+                // Sort by price (ascending)
+                currentPrices.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+
+                // Update current price display (show lowest price)
+                const bestPrice = currentPrices[0];
+                document.getElementById('currentPrice').textContent = `$${bestPrice.price}`;
+                document.getElementById('currentPriceJpy').textContent = `JPY equivalent: ¥${bestPrice.priceJpy}`;
+
+                // Update last update time
+                const now = new Date();
+                document.getElementById('lastUpdate').textContent = 
+                    `Last updated: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+                // Update UI
+                renderExchangeCards();
+
+                refreshBtn.disabled = false;
+                loading.style.display = 'none';
+            }, 1500);
+        }
+
+        // Render exchange cards
+        function renderExchangeCards() {
+            const grid = document.getElementById('exchangeGrid');
+            grid.innerHTML = '';
+
+            currentPrices.forEach((exchange, index) => {
+                const card = document.createElement('div');
+                card.className = `exchange-card ${index === 0 ? 'best-price' : ''}`;
+
+                card.innerHTML = `
+                    <div class="exchange-header">
+                        <div class="exchange-logo">${exchange.logo}</div>
+                        <div class="exchange-name">${exchange.name}</div>
+                    </div>
+                    <div class="price-info">
+                        <div class="price">$${exchange.price}</div>
+                        <div class="price-jpy">¥${exchange.priceJpy}</div>
+                    </div>
+                    <ul class="exchange-features">
+                        ${exchange.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <button class="visit-btn" onclick="window.open('${exchange.url}', '_blank')">
+                        Buy on ${exchange.name}
+                    </button>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', updatePrices);
+
+        // Initial load
+        updatePrices();
+
+        // Auto-refresh (every 5 minutes)
+        setInterval(updatePrices, 5 * 60 * 1000);
+    </script>
+</body>
+</html>
