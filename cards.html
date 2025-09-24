@@ -4,6 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Card Rankings</title>
+    <!-- 共通メニュー用のCSS（各ページのheadに追加） -->
+
+<!-- 共通メニュー用のCSS（各ページのheadに追加） -->
+<style>
+.nav-menu {
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #6f42c1;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-links a:hover {
+    background-color: #e2e6ea;
+}
+
+.nav-links a.active {
+    background-color: #6f42c1;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-links a {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+<!-- 共通メニューHTML（各ページのbody開始直後に追加） -->
+<nav class="nav-menu">
+    <div class="nav-container">
+        <ul class="nav-links">
+            <li><a href="index.html" id="nav-faq">FAQ</a></li>
+            <li><a href="cards.html" id="nav-cards">Crypto Cards</a></li>
+            <li><a href="ada-comparison.html" id="nav-ada">ADA Price Comparison</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- アクティブページのハイライト用JavaScript（各ページのbody終了前に追加） -->
+<script>
+function setActiveMenuItem() {
+    const currentPage = window.location.pathname;
+    const menuItems = document.querySelectorAll('.nav-links a');
+    
+    menuItems.forEach(item => {
+        item.classList.remove('active');
+        const href = item.getAttribute('href');
+        
+        // 現在のページパスと比較
+        if (currentPage === href || 
+            (currentPage === '/support-faq-helper/' && href === '/support-faq-helper/faq-simple.html') ||
+            (currentPage.endsWith('/faq-simple.html') && href.endsWith('/faq-simple.html')) ||
+            (currentPage.endsWith('/cards.html') && href.endsWith('/cards.html')) ||
+            (currentPage.endsWith('/ada-comparison.html') && href.endsWith('/ada-comparison.html'))) {
+            item.classList.add('active');
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', setActiveMenuItem);
+</script>
     <style>
         * {
             margin: 0;
