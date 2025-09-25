@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardano ADA Price Comparison - Buy at Best Price</title>
     
-<!-- 共通メニュー用のCSS（各ページのheadに追加） -->
+<!-- 共通メニュー用のCSS -->
 <style>
 .nav-menu {
     background-color: #f8f9fa;
@@ -59,40 +59,6 @@
 }
 </style>
 
-<!-- 共通メニューHTML（各ページのbody開始直後に追加） -->
-<nav class="nav-menu">
-    <div class="nav-container">
-        <ul class="nav-links">
-            <li><a href="index.html" id="nav-faq">FAQ</a></li>
-            <li><a href="cards.html" id="nav-cards">Crypto Cards</a></li>
-            <li><a href="ada-comparison.html" id="nav-ada">ADA Price Comparison</a></li>
-        </ul>
-    </div>
-</nav>
-
-<!-- アクティブページのハイライト用JavaScript（各ページのbody終了前に追加） -->
-<script>
-function setActiveMenuItem() {
-    const currentPage = window.location.pathname;
-    const menuItems = document.querySelectorAll('.nav-links a');
-    
-    menuItems.forEach(item => {
-        item.classList.remove('active');
-        const href = item.getAttribute('href');
-        
-        // 現在のページパスと比較
-        if (currentPage === href || 
-            (currentPage === '/support-faq-helper/' && href === '/support-faq-helper/faq-simple.html') ||
-            (currentPage.endsWith('/faq-simple.html') && href.endsWith('/faq-simple.html')) ||
-            (currentPage.endsWith('/cards.html') && href.endsWith('/cards.html')) ||
-            (currentPage.endsWith('/ada-comparison.html') && href.endsWith('/ada-comparison.html'))) {
-            item.classList.add('active');
-        }
-    });
-}
-
-document.addEventListener('DOMContentLoaded', setActiveMenuItem);
-</script>
     <style>
         * {
             margin: 0;
@@ -150,6 +116,20 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             color: #0f4c75;
         }
 
+        .price-change {
+            margin-left: 10px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .price-change.positive {
+            color: #28a745;
+        }
+
+        .price-change.negative {
+            color: #dc3545;
+        }
+
         .last-update {
             color: #666;
             font-size: 0.9em;
@@ -176,7 +156,7 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
         }
 
-        .refresh-btn:hover {
+        .refresh-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
@@ -185,18 +165,27 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
         }
 
         .loading {
-            display: none;
             color: #666;
             font-size: 0.9em;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 10px;
         }
 
         .exchange-grid {
             padding: 30px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
         }
 
@@ -207,6 +196,7 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            position: relative;
         }
 
         .exchange-card:hover {
@@ -219,8 +209,7 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             background: linear-gradient(135deg, #f8fff9, #e8f5e8);
         }
 
-        .exchange-card.best-price::before {
-            content: "🏆 Best Price";
+        .best-price-badge {
             position: absolute;
             top: -10px;
             right: 20px;
@@ -230,10 +219,6 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             border-radius: 20px;
             font-size: 0.8em;
             font-weight: bold;
-        }
-
-        .exchange-card {
-            position: relative;
         }
 
         .exchange-header {
@@ -262,6 +247,11 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             color: #333;
         }
 
+        .exchange-id {
+            font-size: 0.9em;
+            color: #666;
+        }
+
         .price-info {
             margin-bottom: 20px;
         }
@@ -273,9 +263,15 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             margin-bottom: 5px;
         }
 
-        .price-jpy {
-            font-size: 1.1em;
+        .price-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
             color: #666;
+        }
+
+        .volume {
+            font-weight: 600;
         }
 
         .exchange-features {
@@ -324,6 +320,20 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             font-size: 0.9em;
         }
 
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.3);
+            border-radius: 50%;
+            border-top-color: #28a745;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2em;
@@ -346,166 +356,484 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
     </style>
 </head>
 <body>
+    <!-- 共通メニュー -->
+    <nav class="nav-menu">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html" id="nav-faq">FAQ</a></li>
+                <li><a href="cards.html" id="nav-cards">Crypto Cards</a></li>
+                <li><a href="ada-comparison.html" id="nav-ada">ADA Price Comparison</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="header">
             <h1>💎 Cardano ADA Price Comparison</h1>
             <p>Find the best exchange to buy ADA at the lowest price</p>
         </div>
-        <div class="demo-warning">
-            ⚠️ DEMO PRICES - NOT REAL DATA
-        </div>
 
         <div class="ada-info">
             <div>
                 <div class="ada-price" id="currentPrice">Loading...</div>
-                <div class="price-jpy" id="currentPriceJpy">JPY equivalent: Calculating...</div>
+                <div class="price-details">
+                    <span id="currentPriceJpy">JPY: Calculating...</span>
+                    <span class="price-change" id="priceChange">--</span>
+                </div>
             </div>
             <div class="last-update" id="lastUpdate">Last updated: --:--</div>
         </div>
 
         <div class="controls">
-            <button class="refresh-btn" id="refreshBtn">🔄 Refresh Prices</button>
-            <div class="loading" id="loading">Fetching data...</div>
+            <button class="refresh-btn" id="refreshBtn">
+                <span class="loading" id="loadingSpinner" style="display: none;">
+                    <span class="loading-spinner"></span>
+                </span>
+                🔄 Refresh Prices
+            </button>
+            <div class="loading" id="status"></div>
         </div>
 
+        <div class="error-message" id="errorMessage" style="display: none;"></div>
+
         <div class="exchange-grid" id="exchangeGrid">
-            <!-- Exchange cards will be dynamically generated here -->
+            <div class="exchange-card">
+                <div class="exchange-header">
+                    <div class="exchange-logo">⏳</div>
+                    <div>
+                        <div class="exchange-name">Loading...</div>
+                        <div class="exchange-id">Fetching exchange data</div>
+                    </div>
+                </div>
+                <div class="price-info">
+                    <div class="price">$--</div>
+                    <div class="price-details">
+                        <span>Volume: --</span>
+                        <span>Spread: --</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="disclaimer">
             <strong>⚠️ Disclaimer:</strong>
-            The prices displayed are for reference only. Please verify actual trading prices on each exchange. Cryptocurrency trading involves high risk. Invest responsibly and at your own risk.
+            Prices are fetched from CoinGecko API and are for reference only. Please verify actual trading prices on each exchange before making any trades. Cryptocurrency trading involves high risk. Always do your own research and invest responsibly.
         </div>
     </div>
 
     <script>
-        // Exchange data (demo)
-        const exchanges = [
-            {
+        // Exchange configuration with URLs and features
+        const EXCHANGE_CONFIG = {
+            binance: {
                 name: 'Binance',
                 logo: 'BN',
-                features: ['World\'s largest trading volume', 'Low trading fees', 'Wide variety of trading pairs'],
-                url: 'https://www.binance.com'
+                url: 'https://www.binance.com/en/trade/ADA_USDT',
+                features: ['World\'s largest trading volume', 'Low trading fees (0.1%)', 'Wide variety of trading pairs', 'Advanced trading tools']
             },
-            {
-                name: 'Coinbase',
+            'binance_us': {
+                name: 'Binance.US',
+                logo: 'BUS',
+                url: 'https://www.binance.us/en/trade/pro/ADA_USD',
+                features: ['US-compliant trading', 'Low fees', 'Advanced charting', 'Mobile app']
+            },
+            gdax: {
+                name: 'Coinbase Pro',
                 logo: 'CB',
-                features: ['Beginner-friendly', 'High security standards', 'Regulatory compliant'],
-                url: 'https://www.coinbase.com'
+                url: 'https://pro.coinbase.com/trade/ADA-USD',
+                features: ['Professional trading', 'High liquidity', 'Regulatory compliant', 'Insurance coverage']
             },
-            {
+            'coinbase-exchange': {
+                name: 'Coinbase Exchange',
+                logo: 'CBX',
+                url: 'https://pro.coinbase.com/trade/ADA-USD',
+                features: ['Professional trading', 'High liquidity', 'Regulatory compliant', 'Insurance coverage']
+            },
+            kraken: {
                 name: 'Kraken',
                 logo: 'KR',
-                features: ['Established exchange', 'Advanced trading features', 'Strong security'],
-                url: 'https://www.kraken.com'
+                url: 'https://www.kraken.com/prices/ada-cardano-price-chart',
+                features: ['Established since 2011', 'Advanced trading features', 'Strong security record', 'Fiat gateway support']
             },
-            {
-                name: 'ByBit',
-                logo: 'BB',
-                features: ['Derivatives trading', 'High liquidity', 'Mobile app available'],
-                url: 'https://www.bybit.com'
-            },
-            {
+            kucoin: {
                 name: 'KuCoin',
                 logo: 'KC',
-                features: ['Diverse token selection', 'Staking supported', 'Trading bonuses'],
-                url: 'https://www.kucoin.com'
+                url: 'https://www.kucoin.com/trade/ADA-USDT',
+                features: ['Diverse token selection', 'Staking rewards available', 'Trading bonuses', 'Mobile app available']
+            },
+            bybit_spot: {
+                name: 'Bybit',
+                logo: 'BB',
+                url: 'https://www.bybit.com/en-US/trade/spot/ADA/USDT',
+                features: ['Derivatives trading', 'High liquidity', 'Copy trading', 'Mobile optimized']
+            },
+            okex: {
+                name: 'OKX',
+                logo: 'OK',
+                url: 'https://www.okx.com/trade-spot/ada-usdt',
+                features: ['Global exchange', 'DeFi products', 'NFT marketplace', 'Earn products']
+            },
+            bitget: {
+                name: 'Bitget',
+                logo: 'BG',
+                url: 'https://www.bitget.com/spot/ADAUSDT',
+                features: ['Copy trading leader', 'Futures trading', 'Social trading', 'Low fees']
+            },
+            gate: {
+                name: 'Gate.io',
+                logo: 'GT',
+                url: 'https://www.gate.io/trade/ADA_USDT',
+                features: ['Wide altcoin selection', 'Copy trading', 'Lending services', 'NFT marketplace']
+            },
+            mxc: {
+                name: 'MEXC',
+                logo: 'MX',
+                url: 'https://www.mexc.com/exchange/ADA_USDT',
+                features: ['Low trading fees', 'New token listings', 'Futures trading', 'Launchpad']
+            },
+            huobi: {
+                name: 'HTX',
+                logo: 'HT',
+                url: 'https://www.htx.com/en-us/trade/ada_usdt',
+                features: ['Global presence', 'DeFi integration', 'Margin trading', 'Prime services']
+            },
+            bitfinex: {
+                name: 'Bitfinex',
+                logo: 'BF',
+                url: 'https://www.bitfinex.com/t/ADA:USD',
+                features: ['Professional trading', 'Margin trading', 'Lending', 'Advanced orders']
+            },
+            bingx: {
+                name: 'BingX',
+                logo: 'BX',
+                url: 'https://bingx.com/en-us/spot/ADAUSDT',
+                features: ['Copy trading', 'Grid trading', 'Social features', 'Mobile focused']
+            },
+            bitstamp: {
+                name: 'Bitstamp',
+                logo: 'BS',
+                url: 'https://www.bitstamp.net/markets/ada/usd/',
+                features: ['EU regulated', 'Established 2011', 'High security', 'Institutional services']
+            },
+            whitebit: {
+                name: 'WhiteBIT',
+                logo: 'WB',
+                url: 'https://whitebit.com/trade/ADA_USDT',
+                features: ['European exchange', 'Smart staking', 'Low fees', 'Mobile app']
+            },
+            coinex: {
+                name: 'CoinEx',
+                logo: 'CE',
+                url: 'https://www.coinex.com/exchange/ada-usdt',
+                features: ['Global exchange', 'Mining pool', 'Perpetual trading', 'AMM']
+            },
+            xt: {
+                name: 'XT.COM',
+                logo: 'XT',
+                url: 'https://www.xt.com/tradePro/ada_usdt',
+                features: ['Social trading', 'Copy trading', 'Futures', 'Spot trading']
+            },
+            bitrue: {
+                name: 'Bitrue',
+                logo: 'BR',
+                url: 'https://www.bitrue.com/trade/ada_usdt',
+                features: ['XRP-focused', 'Power piggy', 'Staking', 'Loans']
+            },
+            pionex: {
+                name: 'Pionex',
+                logo: 'PX',
+                url: 'https://www.pionex.com/en-US/trade/ADA_USDT',
+                features: ['Built-in trading bots', 'Grid trading', 'DCA bot', 'Low fees']
+            },
+            bit2me: {
+                name: 'Bit2Me',
+                logo: 'B2M',
+                url: 'https://bit2me.com/price/cardano',
+                features: ['European focus', 'Regulated in Spain', 'Earn products', 'Mobile app']
             }
-        ];
+        };
 
-        // JPY conversion rate (demo fixed value)
-        const USDJPY_RATE = 150;
+        // Global state
+        let exchangeData = [];
+        let usdToJpy = 150; // Default rate, will be updated
+        let isLoading = false;
 
-        let currentPrices = [];
+        // API endpoints
+        const COINGECKO_API = 'https://api.coingecko.com/api/v3';
+        const ADA_TICKERS_URL = `${COINGECKO_API}/coins/cardano/tickers`;
+        const USD_JPY_URL = `${COINGECKO_API}/simple/price?ids=cardano&vs_currencies=usd,jpy&include_24hr_change=true`;
 
-        // Generate random price (substitute for actual API)
-        function generateRandomPrice(basePrice = 0.45) {
-            const variation = 0.02; // ±2% variation
-            const randomFactor = 1 + (Math.random() - 0.5) * 2 * variation;
-            return (basePrice * randomFactor).toFixed(4);
+        // Utility functions
+        function formatPrice(price) {
+            return parseFloat(price).toFixed(4);
         }
 
-        // Update price data
-        function updatePrices() {
-            const refreshBtn = document.getElementById('refreshBtn');
-            const loading = document.getElementById('loading');
+        function formatVolume(volume) {
+            if (volume >= 1000000) {
+                return `$${(volume / 1000000).toFixed(1)}M`;
+            } else if (volume >= 1000) {
+                return `$${(volume / 1000).toFixed(0)}K`;
+            }
+            return `$${volume.toFixed(0)}`;
+        }
+
+        function formatPercentage(change) {
+            const formatted = parseFloat(change).toFixed(2);
+            return `${change >= 0 ? '+' : ''}${formatted}%`;
+        }
+
+        // API functions
+        async function fetchExchangeRates() {
+            try {
+                const response = await fetch(USD_JPY_URL);
+                if (!response.ok) throw new Error('Failed to fetch exchange rates');
+                
+                const data = await response.json();
+                const cardanoData = data.cardano;
+                
+                if (cardanoData.jpy && cardanoData.usd) {
+                    usdToJpy = cardanoData.jpy / cardanoData.usd;
+                }
+                
+                return {
+                    usd: cardanoData.usd,
+                    jpy: cardanoData.jpy,
+                    change24h: cardanoData.usd_24h_change
+                };
+            } catch (error) {
+                console.error('Error fetching exchange rates:', error);
+                throw error;
+            }
+        }
+
+        async function fetchADATickers() {
+            try {
+                const response = await fetch(ADA_TICKERS_URL);
+                if (!response.ok) throw new Error('Failed to fetch ticker data');
+                
+                const data = await response.json();
+                return data.tickers || [];
+            } catch (error) {
+                console.error('Error fetching ADA tickers:', error);
+                throw error;
+            }
+        }
+
+        // Data processing
+        function processExchangeData(tickers) {
+            const exchangeMap = new Map();
+            console.log('Total tickers received:', tickers.length);
             
-            refreshBtn.disabled = true;
-            loading.style.display = 'inline';
+            // Debug: Log all available exchange IDs
+            const availableExchanges = new Set();
+            tickers.forEach(ticker => {
+                if (ticker.market?.identifier) {
+                    availableExchanges.add(ticker.market.identifier.toLowerCase());
+                }
+            });
+            console.log('Available exchange IDs:', Array.from(availableExchanges));
+            console.log('Configured exchange IDs:', Object.keys(EXCHANGE_CONFIG));
 
-            // Simulated API call
-            setTimeout(() => {
-                // Generate price for each exchange
-                currentPrices = exchanges.map((exchange, index) => ({
-                    ...exchange,
-                    price: generateRandomPrice(0.45 + index * 0.001),
-                    priceJpy: null
-                }));
+            tickers.forEach(ticker => {
+                const exchangeId = ticker.market?.identifier?.toLowerCase();
+                if (!exchangeId) return;
+                
+                // Debug: Log processing attempts
+                console.log(`Processing: ${exchangeId}, has config: ${!!EXCHANGE_CONFIG[exchangeId]}`);
+                
+                if (!EXCHANGE_CONFIG[exchangeId]) return;
 
-                // Calculate JPY prices
-                currentPrices.forEach(exchange => {
-                    exchange.priceJpy = (parseFloat(exchange.price) * USDJPY_RATE).toFixed(2);
-                });
+                const price = parseFloat(ticker.last);
+                const volume = parseFloat(ticker.volume);
+                
+                if (isNaN(price) || price <= 0) {
+                    console.log(`Invalid price for ${exchangeId}: ${price}`);
+                    return;
+                }
 
-                // Sort by price (ascending)
-                currentPrices.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+                // Keep the ticker with highest volume for each exchange
+                if (!exchangeMap.has(exchangeId) || 
+                    volume > exchangeMap.get(exchangeId).volume) {
+                    
+                    exchangeMap.set(exchangeId, {
+                        id: exchangeId,
+                        name: EXCHANGE_CONFIG[exchangeId].name,
+                        logo: EXCHANGE_CONFIG[exchangeId].logo,
+                        url: EXCHANGE_CONFIG[exchangeId].url,
+                        features: EXCHANGE_CONFIG[exchangeId].features,
+                        price: price,
+                        volume: volume,
+                        pair: ticker.base + '/' + ticker.target,
+                        trustScore: ticker.trust_score || 'N/A',
+                        lastUpdate: ticker.timestamp || new Date().toISOString()
+                    });
+                    console.log(`Added: ${exchangeId} at ${price}`);
+                }
+            });
 
-                // Update current price display (show lowest price)
-                const bestPrice = currentPrices[0];
-                document.getElementById('currentPrice').textContent = `$${bestPrice.price}`;
-                document.getElementById('currentPriceJpy').textContent = `JPY equivalent: ¥${bestPrice.priceJpy}`;
+            // Convert to array and sort by price (ascending)
+            const exchanges = Array.from(exchangeMap.values())
+                .filter(exchange => exchange.price > 0)
+                .sort((a, b) => a.price - b.price);
 
-                // Update last update time
-                const now = new Date();
-                document.getElementById('lastUpdate').textContent = 
-                    `Last updated: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-                // Update UI
-                renderExchangeCards();
-
-                refreshBtn.disabled = false;
-                loading.style.display = 'none';
-            }, 1500);
+            console.log(`Final exchanges count: ${exchanges.length}`);
+            return exchanges.slice(0, 15); // Show top 15 exchanges
         }
 
-        // Render exchange cards
+        // UI functions
+        function updatePriceHeader(priceData) {
+            const currentPriceEl = document.getElementById('currentPrice');
+            const currentPriceJpyEl = document.getElementById('currentPriceJpy');
+            const priceChangeEl = document.getElementById('priceChange');
+
+            if (priceData) {
+                currentPriceEl.textContent = `$${formatPrice(priceData.usd)}`;
+                currentPriceJpyEl.textContent = `JPY: ¥${formatPrice(priceData.jpy)}`;
+                
+                if (priceData.change24h !== undefined) {
+                    priceChangeEl.textContent = formatPercentage(priceData.change24h);
+                    priceChangeEl.className = `price-change ${priceData.change24h >= 0 ? 'positive' : 'negative'}`;
+                }
+            }
+
+            // Update timestamp
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = 
+                `Last updated: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+
         function renderExchangeCards() {
             const grid = document.getElementById('exchangeGrid');
-            grid.innerHTML = '';
+            
+            if (exchangeData.length === 0) {
+                grid.innerHTML = '<div class="exchange-card"><div class="exchange-header"><div class="exchange-name">No exchange data available</div></div></div>';
+                return;
+            }
 
-            currentPrices.forEach((exchange, index) => {
-                const card = document.createElement('div');
-                card.className = `exchange-card ${index === 0 ? 'best-price' : ''}`;
-
-                card.innerHTML = `
+            grid.innerHTML = exchangeData.map((exchange, index) => `
+                <div class="exchange-card ${index === 0 ? 'best-price' : ''}">
+                    ${index === 0 ? '<div class="best-price-badge">🏆 Best Price</div>' : ''}
                     <div class="exchange-header">
                         <div class="exchange-logo">${exchange.logo}</div>
-                        <div class="exchange-name">${exchange.name}</div>
+                        <div>
+                            <div class="exchange-name">${exchange.name}</div>
+                            <div class="exchange-id">${exchange.pair}</div>
+                        </div>
                     </div>
                     <div class="price-info">
-                        <div class="price">$${exchange.price}</div>
-                        <div class="price-jpy">¥${exchange.priceJpy}</div>
+                        <div class="price">$${formatPrice(exchange.price)}</div>
+                        <div class="price-details">
+                            <span class="volume">Vol: ${formatVolume(exchange.volume)}</span>
+                            <span>¥${formatPrice(exchange.price * usdToJpy)}</span>
+                        </div>
                     </div>
                     <ul class="exchange-features">
-                        ${exchange.features.map(feature => `<li>${feature}</li>`).join('')}
+                        ${exchange.features.slice(0, 3).map(feature => `<li>${feature}</li>`).join('')}
                     </ul>
                     <button class="visit-btn" onclick="window.open('${exchange.url}', '_blank')">
                         Buy on ${exchange.name}
                     </button>
-                `;
+                </div>
+            `).join('');
+        }
 
-                grid.appendChild(card);
+        function showError(message) {
+            const errorEl = document.getElementById('errorMessage');
+            errorEl.textContent = `Error: ${message}`;
+            errorEl.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+
+        function setLoadingState(loading) {
+            isLoading = loading;
+            const refreshBtn = document.getElementById('refreshBtn');
+            const spinner = document.getElementById('loadingSpinner');
+            const status = document.getElementById('status');
+
+            refreshBtn.disabled = loading;
+            spinner.style.display = loading ? 'inline-block' : 'none';
+            status.textContent = loading ? 'Fetching latest prices...' : '';
+        }
+
+        // Main update function
+        async function updatePrices() {
+            if (isLoading) return;
+
+            setLoadingState(true);
+            hideError();
+
+            try {
+                // Fetch both exchange rates and ticker data
+                const [priceData, tickers] = await Promise.all([
+                    fetchExchangeRates(),
+                    fetchADATickers()
+                ]);
+
+                // Process exchange data
+                exchangeData = processExchangeData(tickers);
+
+                // Update UI
+                updatePriceHeader(priceData);
+                renderExchangeCards();
+
+                console.log(`Updated with ${exchangeData.length} exchanges`);
+
+            } catch (error) {
+                console.error('Error updating prices:', error);
+                showError('Failed to fetch price data. Please try again later.');
+                
+                // Show fallback message if no data exists
+                if (exchangeData.length === 0) {
+                    document.getElementById('exchangeGrid').innerHTML = `
+                        <div class="exchange-card">
+                            <div class="exchange-header">
+                                <div class="exchange-logo">⚠️</div>
+                                <div class="exchange-name">Unable to load data</div>
+                            </div>
+                            <div class="price-info">
+                                <div class="price">API Error</div>
+                                <div class="price-details">
+                                    <span>Please try refreshing</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // Menu active state handler
+        function setActiveMenuItem() {
+            const currentPath = window.location.pathname;
+            const currentFile = currentPath.split('/').pop() || 'index.html';
+            const menuItems = document.querySelectorAll('.nav-links a');
+            
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+                const href = item.getAttribute('href');
+                const hrefFile = href.split('/').pop();
+                
+                if (hrefFile === currentFile) {
+                    item.classList.add('active');
+                }
             });
         }
 
         // Event listeners
         document.getElementById('refreshBtn').addEventListener('click', updatePrices);
 
-        // Initial load
-        updatePrices();
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setActiveMenuItem();
+            updatePrices();
+        });
 
-        // Auto-refresh (every 5 minutes)
-        setInterval(updatePrices, 5 * 60 * 1000);
+        // Auto-refresh every 2 minutes (respecting API rate limits)
+        setInterval(updatePrices, 2 * 60 * 1000);
     </script>
 </body>
 </html>
