@@ -110,10 +110,20 @@
             flex-wrap: wrap;
         }
 
+        .price-label {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #0f4c75;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .ada-price {
-            font-size: 2em;
+            font-size: 2.8em;
             font-weight: bold;
             color: #0f4c75;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .price-change {
@@ -141,6 +151,24 @@
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
+            background: #f8f9fa;
+        }
+
+        .location-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #0f4c75;
+            border-radius: 25px;
+            font-weight: 600;
+            color: #0f4c75;
+            font-size: 0.95em;
+        }
+
+        .location-icon {
+            font-size: 1.2em;
         }
 
         .refresh-btn {
@@ -369,15 +397,21 @@
 
     <div class="container">
         <div class="header">
-            <h1>💎 Cardano ADA Price Comparison</h1>
-            <p>Find the best exchange to buy ADA at the lowest price</p>
+            <img src="cardano-ada-logo.svg" 
+                 alt="Cardano Logo" 
+                 width="60" 
+                 height="60" 
+                 style="display: inline-block; vertical-align: middle; margin-right: 15px;">
+            <h1 style="display: inline-block; vertical-align: middle;">Cardano ADA Price Comparison</h1>
+            <p>Find the best exchange to buy ADA at the lowest price in your currency</p>
         </div>
 
         <div class="ada-info">
             <div>
+                <div class="price-label">1 ADA =</div>
                 <div class="ada-price" id="currentPrice">Loading...</div>
                 <div class="price-details">
-                    <span id="currentPriceJpy">JPY: Calculating...</span>
+                    <span id="currentPriceLocal" style="font-size: 1em; color: #666; font-weight: 500;"></span>
                     <span class="price-change" id="priceChange">--</span>
                 </div>
             </div>
@@ -391,7 +425,10 @@
                 </span>
                 🔄 Refresh Prices
             </button>
-            <div class="loading" id="status"></div>
+            <div class="location-badge" id="status">
+                <span class="location-icon">🌍</span>
+                <span>Detecting location...</span>
+            </div>
         </div>
 
         <div class="error-message" id="errorMessage" style="display: none;"></div>
@@ -417,323 +454,173 @@
 
         <div class="disclaimer">
             <strong>⚠️ Disclaimer:</strong>
-            Prices are fetched from CoinGecko API and are for reference only. Please verify actual trading prices on each exchange before making any trades. Cryptocurrency trading involves high risk. Always do your own research and invest responsibly.
+            Prices are fetched from CoinGecko API and are for reference only. Exchanges shown are filtered based on your detected location. Please verify actual trading prices on each exchange before making any trades. Cryptocurrency trading involves high risk. Always do your own research and invest responsibly.
         </div>
     </div>
 
     <script>
-        // Exchange configuration with URLs and features
         const EXCHANGE_CONFIG = {
-            binance: {
-                name: 'Binance',
-                logo: 'BN',
-                url: 'https://www.binance.com/en/trade/ADA_USDT',
-                features: ['World\'s largest trading volume', 'Low trading fees (0.1%)', 'Wide variety of trading pairs', 'Advanced trading tools']
-            },
-            'binance_us': {
-                name: 'Binance.US',
-                logo: 'BUS',
-                url: 'https://www.binance.us/en/trade/pro/ADA_USD',
-                features: ['US-compliant trading', 'Low fees', 'Advanced charting', 'Mobile app']
-            },
-            gdax: {
-                name: 'Coinbase Pro',
-                logo: 'CB',
-                url: 'https://pro.coinbase.com/trade/ADA-USD',
-                features: ['Professional trading', 'High liquidity', 'Regulatory compliant', 'Insurance coverage']
-            },
-            'coinbase-exchange': {
-                name: 'Coinbase Exchange',
-                logo: 'CBX',
-                url: 'https://pro.coinbase.com/trade/ADA-USD',
-                features: ['Professional trading', 'High liquidity', 'Regulatory compliant', 'Insurance coverage']
-            },
-            kraken: {
-                name: 'Kraken',
-                logo: 'KR',
-                url: 'https://www.kraken.com/prices/ada-cardano-price-chart',
-                features: ['Established since 2011', 'Advanced trading features', 'Strong security record', 'Fiat gateway support']
-            },
-            kucoin: {
-                name: 'KuCoin',
-                logo: 'KC',
-                url: 'https://www.kucoin.com/trade/ADA-USDT',
-                features: ['Diverse token selection', 'Staking rewards available', 'Trading bonuses', 'Mobile app available']
-            },
-            bybit_spot: {
-                name: 'Bybit',
-                logo: 'BB',
-                url: 'https://www.bybit.com/en-US/trade/spot/ADA/USDT',
-                features: ['Derivatives trading', 'High liquidity', 'Copy trading', 'Mobile optimized']
-            },
-            okex: {
-                name: 'OKX',
-                logo: 'OK',
-                url: 'https://www.okx.com/trade-spot/ada-usdt',
-                features: ['Global exchange', 'DeFi products', 'NFT marketplace', 'Earn products']
-            },
-            bitget: {
-                name: 'Bitget',
-                logo: 'BG',
-                url: 'https://www.bitget.com/spot/ADAUSDT',
-                features: ['Copy trading leader', 'Futures trading', 'Social trading', 'Low fees']
-            },
-            gate: {
-                name: 'Gate.io',
-                logo: 'GT',
-                url: 'https://www.gate.io/trade/ADA_USDT',
-                features: ['Wide altcoin selection', 'Copy trading', 'Lending services', 'NFT marketplace']
-            },
-            mxc: {
-                name: 'MEXC',
-                logo: 'MX',
-                url: 'https://www.mexc.com/exchange/ADA_USDT',
-                features: ['Low trading fees', 'New token listings', 'Futures trading', 'Launchpad']
-            },
-            huobi: {
-                name: 'HTX',
-                logo: 'HT',
-                url: 'https://www.htx.com/en-us/trade/ada_usdt',
-                features: ['Global presence', 'DeFi integration', 'Margin trading', 'Prime services']
-            },
-            bitfinex: {
-                name: 'Bitfinex',
-                logo: 'BF',
-                url: 'https://www.bitfinex.com/t/ADA:USD',
-                features: ['Professional trading', 'Margin trading', 'Lending', 'Advanced orders']
-            },
-            bingx: {
-                name: 'BingX',
-                logo: 'BX',
-                url: 'https://bingx.com/en-us/spot/ADAUSDT',
-                features: ['Copy trading', 'Grid trading', 'Social features', 'Mobile focused']
-            },
-            bitstamp: {
-                name: 'Bitstamp',
-                logo: 'BS',
-                url: 'https://www.bitstamp.net/markets/ada/usd/',
-                features: ['EU regulated', 'Established 2011', 'High security', 'Institutional services']
-            },
-            whitebit: {
-                name: 'WhiteBIT',
-                logo: 'WB',
-                url: 'https://whitebit.com/trade/ADA_USDT',
-                features: ['European exchange', 'Smart staking', 'Low fees', 'Mobile app']
-            },
-            coinex: {
-                name: 'CoinEx',
-                logo: 'CE',
-                url: 'https://www.coinex.com/exchange/ada-usdt',
-                features: ['Global exchange', 'Mining pool', 'Perpetual trading', 'AMM']
-            },
-            xt: {
-                name: 'XT.COM',
-                logo: 'XT',
-                url: 'https://www.xt.com/tradePro/ada_usdt',
-                features: ['Social trading', 'Copy trading', 'Futures', 'Spot trading']
-            },
-            bitrue: {
-                name: 'Bitrue',
-                logo: 'BR',
-                url: 'https://www.bitrue.com/trade/ada_usdt',
-                features: ['XRP-focused', 'Power piggy', 'Staking', 'Loans']
-            },
-            pionex: {
-                name: 'Pionex',
-                logo: 'PX',
-                url: 'https://www.pionex.com/en-US/trade/ADA_USDT',
-                features: ['Built-in trading bots', 'Grid trading', 'DCA bot', 'Low fees']
-            },
-            bit2me: {
-                name: 'Bit2Me',
-                logo: 'B2M',
-                url: 'https://bit2me.com/price/cardano',
-                features: ['European focus', 'Regulated in Spain', 'Earn products', 'Mobile app']
-            }
+            binance: { name: 'Binance', logo: 'BN', url: 'https://www.binance.com/en/trade/ADA_USDT', features: ['World\'s largest trading volume', 'Low trading fees (0.1%)', 'Wide variety of trading pairs'], countries: ['GLOBAL'] },
+            binance_us: { name: 'Binance.US', logo: 'BUS', url: 'https://www.binance.us/en/trade/pro/ADA_USD', features: ['US-compliant trading', 'Low fees', 'Advanced charting'], countries: ['US'] },
+            gdax: { name: 'Coinbase Pro', logo: 'CB', url: 'https://pro.coinbase.com/trade/ADA-USD', features: ['Professional trading', 'High liquidity', 'Regulatory compliant'], countries: ['US', 'GB', 'CA', 'AU', 'SG', 'GLOBAL'] },
+            kraken: { name: 'Kraken', logo: 'KR', url: 'https://www.kraken.com/prices/ada-cardano-price-chart', features: ['Established since 2011', 'Advanced trading features', 'Strong security record'], countries: ['US', 'GB', 'CA', 'AU', 'EU', 'GLOBAL'] },
+            kucoin: { name: 'KuCoin', logo: 'KC', url: 'https://www.kucoin.com/trade/ADA-USDT', features: ['Diverse token selection', 'Staking rewards available', 'Trading bonuses'], countries: ['GLOBAL'] },
+            bybit_spot: { name: 'Bybit', logo: 'BB', url: 'https://www.bybit.com/en-US/trade/spot/ADA/USDT', features: ['Derivatives trading', 'High liquidity', 'Copy trading'], countries: ['GLOBAL'] },
+            okex: { name: 'OKX', logo: 'OK', url: 'https://www.okx.com/trade-spot/ada-usdt', features: ['Global exchange', 'DeFi products', 'NFT marketplace'], countries: ['GLOBAL'] },
+            bitget: { name: 'Bitget', logo: 'BG', url: 'https://www.bitget.com/spot/ADAUSDT', features: ['Copy trading leader', 'Futures trading', 'Social trading'], countries: ['GLOBAL'] },
+            gate: { name: 'Gate.io', logo: 'GT', url: 'https://www.gate.io/trade/ADA_USDT', features: ['Wide altcoin selection', 'Copy trading', 'Lending services'], countries: ['GLOBAL'] },
+            mxc: { name: 'MEXC', logo: 'MX', url: 'https://www.mexc.com/exchange/ADA_USDT', features: ['Low trading fees', 'New token listings', 'Futures trading'], countries: ['GLOBAL'] },
+            huobi: { name: 'HTX', logo: 'HT', url: 'https://www.htx.com/en-us/trade/ada_usdt', features: ['Global presence', 'DeFi integration', 'Margin trading'], countries: ['GLOBAL'] },
+            bitfinex: { name: 'Bitfinex', logo: 'BF', url: 'https://www.bitfinex.com/t/ADA:USD', features: ['Professional trading', 'Margin trading', 'Lending'], countries: ['GLOBAL'] },
+            bingx: { name: 'BingX', logo: 'BX', url: 'https://bingx.com/en-us/spot/ADAUSDT', features: ['Copy trading', 'Grid trading', 'Social features'], countries: ['GLOBAL'] },
+            bitstamp: { name: 'Bitstamp', logo: 'BS', url: 'https://www.bitstamp.net/markets/ada/usd/', features: ['EU regulated', 'Established 2011', 'High security'], countries: ['US', 'GB', 'EU', 'GLOBAL'] },
+            whitebit: { name: 'WhiteBIT', logo: 'WB', url: 'https://whitebit.com/trade/ADA_USDT', features: ['European exchange', 'Smart staking', 'Low fees'], countries: ['EU', 'GLOBAL'] },
+            coinex: { name: 'CoinEx', logo: 'CE', url: 'https://www.coinex.com/exchange/ada-usdt', features: ['Global exchange', 'Mining pool', 'Perpetual trading'], countries: ['GLOBAL'] },
+            xt: { name: 'XT.COM', logo: 'XT', url: 'https://www.xt.com/tradePro/ada_usdt', features: ['Social trading', 'Copy trading', 'Futures'], countries: ['GLOBAL'] },
+            bitrue: { name: 'Bitrue', logo: 'BR', url: 'https://www.bitrue.com/trade/ada_usdt', features: ['XRP-focused', 'Power piggy', 'Staking'], countries: ['GLOBAL'] },
+            pionex: { name: 'Pionex', logo: 'PX', url: 'https://www.pionex.com/en-US/trade/ADA_USDT', features: ['Built-in trading bots', 'Grid trading', 'DCA bot'], countries: ['GLOBAL'] },
+            bit2me: { name: 'Bit2Me', logo: 'B2M', url: 'https://bit2me.com/price/cardano', features: ['European focus', 'Regulated in Spain', 'Earn products'], countries: ['ES', 'EU'] },
+            coinspot: { name: 'CoinSpot', logo: 'CS', url: 'https://www.coinspot.com.au/buy/ada', features: ['Australian owned', 'AUD deposits', 'Local support'], countries: ['AU'] },
+            independent_reserve: { name: 'Independent Reserve', logo: 'IR', url: 'https://www.independentreserve.com/market/ada', features: ['Australian regulated', 'High security', 'AUD/NZD support'], countries: ['AU', 'NZ'] },
+            bitflyer: { name: 'bitFlyer', logo: 'BF', url: 'https://bitflyer.com/en-jp/ex/simple', features: ['Japan\'s largest', 'FSA licensed', 'Insurance coverage'], countries: ['JP'] },
+            coincheck: { name: 'Coincheck', logo: 'CC', url: 'https://coincheck.com/exchange', features: ['Beginner friendly', 'Mobile app', 'NFT marketplace'], countries: ['JP'] },
+            gmo_japan: { name: 'GMOコイン', logo: 'GMO', url: 'https://coin.z.com/jp/corp/product/info/ada/', features: ['GMO Group', 'No trading fees', 'Staking rewards'], countries: ['JP'] },
+            bitbank: { name: 'bitbank', logo: 'BB', url: 'https://bitbank.cc/markets', features: ['High liquidity', 'Advanced charts', 'Security'], countries: ['JP'] },
+            sbi_vc: { name: 'SBI VCトレード', logo: 'SBI', url: 'https://www.sbivc.co.jp/services/ada', features: ['SBI Group', 'Financial license', 'Security focus'], countries: ['JP'] },
+            bitpoint: { name: 'BITPoint', logo: 'BP', url: 'https://www.bitpoint.co.jp/trade/', features: ['No trading fees', 'Lending service', 'ADA staking'], countries: ['JP'] }
         };
 
-        // Global state
-        let exchangeData = [];
-        let usdToJpy = 150; // Default rate, will be updated
-        let isLoading = false;
+        const CURRENCY_CONFIG = {
+            'US': { currency: 'USD', symbol: '$', name: 'US Dollar' },
+            'AU': { currency: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+            'JP': { currency: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+            'GB': { currency: 'GBP', symbol: '£', name: 'British Pound' },
+            'EU': { currency: 'EUR', symbol: '€', name: 'Euro' },
+            'CA': { currency: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+            'NZ': { currency: 'NZD', symbol: 'NZ$', name: 'New Zealand Dollar' },
+            'SG': { currency: 'SGD', symbol: 'S$', name: 'Singapore Dollar' },
+            'KR': { currency: 'KRW', symbol: '₩', name: 'Korean Won' },
+            'DEFAULT': { currency: 'USD', symbol: '$', name: 'US Dollar' }
+        };
 
-        // API endpoints
         const COINGECKO_API = 'https://api.coingecko.com/api/v3';
         const ADA_TICKERS_URL = `${COINGECKO_API}/coins/cardano/tickers`;
-        const USD_JPY_URL = `${COINGECKO_API}/simple/price?ids=cardano&vs_currencies=usd,jpy&include_24hr_change=true`;
+        const IP_API_URL = 'https://ipapi.co/json/';
 
-        // Utility functions
-        function formatPrice(price) {
-            return parseFloat(price).toFixed(4);
-        }
+        let userCountry = 'US', userCurrency = 'USD', userCurrencySymbol = '$';
+        let exchangeData = [], currencyRates = {}, isLoading = false;
 
+        function formatPrice(price) { return parseFloat(price).toFixed(2); }
         function formatVolume(volume) {
-            if (volume >= 1000000) {
-                return `$${(volume / 1000000).toFixed(1)}M`;
-            } else if (volume >= 1000) {
-                return `$${(volume / 1000).toFixed(0)}K`;
-            }
-            return `$${volume.toFixed(0)}`;
+            if (volume >= 1000000) return `${userCurrencySymbol}${(volume/1000000).toFixed(1)}M`;
+            if (volume >= 1000) return `${userCurrencySymbol}${(volume/1000).toFixed(0)}K`;
+            return `${userCurrencySymbol}${volume.toFixed(0)}`;
+        }
+        function formatPercentage(change) { return `${change >= 0 ? '+' : ''}${parseFloat(change).toFixed(2)}%`; }
+        function convertPrice(usdPrice) {
+            const key = userCurrency.toLowerCase();
+            if (currencyRates[key]) return usdPrice * (currencyRates[key] / currencyRates.usd);
+            return usdPrice;
         }
 
-        function formatPercentage(change) {
-            const formatted = parseFloat(change).toFixed(2);
-            return `${change >= 0 ? '+' : ''}${formatted}%`;
-        }
-
-        // API functions
-        async function fetchExchangeRates() {
+        async function detectUserLocation() {
             try {
-                const response = await fetch(USD_JPY_URL);
-                if (!response.ok) throw new Error('Failed to fetch exchange rates');
-                
+                const response = await fetch(IP_API_URL);
+                if (!response.ok) throw new Error('Failed');
                 const data = await response.json();
-                const cardanoData = data.cardano;
-                
-                if (cardanoData.jpy && cardanoData.usd) {
-                    usdToJpy = cardanoData.jpy / cardanoData.usd;
-                }
-                
-                return {
-                    usd: cardanoData.usd,
-                    jpy: cardanoData.jpy,
-                    change24h: cardanoData.usd_24h_change
-                };
+                userCountry = data.country_code || 'US';
+                const currencyInfo = CURRENCY_CONFIG[userCountry] || CURRENCY_CONFIG['DEFAULT'];
+                userCurrency = currencyInfo.currency;
+                userCurrencySymbol = currencyInfo.symbol;
+                console.log(`Detected location: ${userCountry}, Currency: ${userCurrency} (${userCurrencySymbol})`);
+                const statusEl = document.getElementById('status');
+                if (statusEl) statusEl.innerHTML = `<span class="location-icon">📍</span><span>${data.country_name || userCountry} • ${currencyInfo.name}</span>`;
+                return userCountry;
             } catch (error) {
-                console.error('Error fetching exchange rates:', error);
-                throw error;
+                console.error('Error detecting location:', error);
+                const statusEl = document.getElementById('status');
+                if (statusEl) statusEl.innerHTML = `<span class="location-icon">🌍</span><span>Location Unknown • US Dollar</span>`;
+                return 'US';
             }
+        }
+
+        async function fetchExchangeRates() {
+            const currencies = Object.values(CURRENCY_CONFIG).map(c => c.currency.toLowerCase()).join(',');
+            const response = await fetch(`${COINGECKO_API}/simple/price?ids=cardano&vs_currencies=${currencies}&include_24hr_change=true`);
+            const data = await response.json();
+            currencyRates = data.cardano;
+            console.log('Currency rates:', currencyRates);
+            return { price: currencyRates[userCurrency.toLowerCase()], change24h: currencyRates[`${userCurrency.toLowerCase()}_24h_change`] || currencyRates.usd_24h_change };
         }
 
         async function fetchADATickers() {
-            try {
-                const response = await fetch(ADA_TICKERS_URL);
-                if (!response.ok) throw new Error('Failed to fetch ticker data');
-                
-                const data = await response.json();
-                return data.tickers || [];
-            } catch (error) {
-                console.error('Error fetching ADA tickers:', error);
-                throw error;
-            }
+            const response = await fetch(ADA_TICKERS_URL);
+            const data = await response.json();
+            return data.tickers || [];
         }
 
-        // Data processing
         function processExchangeData(tickers) {
             const exchangeMap = new Map();
-            console.log('Total tickers received:', tickers.length);
-            
-            // Debug: Log all available exchange IDs
-            const availableExchanges = new Set();
-            tickers.forEach(ticker => {
-                if (ticker.market?.identifier) {
-                    availableExchanges.add(ticker.market.identifier.toLowerCase());
-                }
-            });
-            console.log('Available exchange IDs:', Array.from(availableExchanges));
-            console.log('Configured exchange IDs:', Object.keys(EXCHANGE_CONFIG));
-
+            console.log('Total tickers:', tickers.length, 'Country:', userCountry);
+            const validTargets = ['usd', 'usdt', 'usdc', 'eur', 'jpy', 'gbp', 'krw', 'try', 'fdusd', 'aud', 'cad', 'nzd', 'sgd'];
             tickers.forEach(ticker => {
                 const exchangeId = ticker.market?.identifier?.toLowerCase();
                 if (!exchangeId) return;
-                
-                // Debug: Log processing attempts
-                console.log(`Processing: ${exchangeId}, has config: ${!!EXCHANGE_CONFIG[exchangeId]}`);
-                
-                if (!EXCHANGE_CONFIG[exchangeId]) return;
-
+                const exchangeConfig = EXCHANGE_CONFIG[exchangeId];
+                if (!exchangeConfig) return;
+                const availableInCountry = exchangeConfig.countries.includes(userCountry) || exchangeConfig.countries.includes('GLOBAL');
+                if (!availableInCountry) return;
+                const target = ticker.target?.toLowerCase();
+                if (!target || !validTargets.includes(target)) return;
                 const price = parseFloat(ticker.last);
                 const volume = parseFloat(ticker.volume);
-                
-                if (isNaN(price) || price <= 0) {
-                    console.log(`Invalid price for ${exchangeId}: ${price}`);
-                    return;
-                }
-
-                // Keep the ticker with highest volume for each exchange
-                if (!exchangeMap.has(exchangeId) || 
-                    volume > exchangeMap.get(exchangeId).volume) {
-                    
-                    exchangeMap.set(exchangeId, {
-                        id: exchangeId,
-                        name: EXCHANGE_CONFIG[exchangeId].name,
-                        logo: EXCHANGE_CONFIG[exchangeId].logo,
-                        url: EXCHANGE_CONFIG[exchangeId].url,
-                        features: EXCHANGE_CONFIG[exchangeId].features,
-                        price: price,
-                        volume: volume,
-                        pair: ticker.base + '/' + ticker.target,
-                        trustScore: ticker.trust_score || 'N/A',
-                        lastUpdate: ticker.timestamp || new Date().toISOString()
-                    });
-                    console.log(`Added: ${exchangeId} at ${price}`);
+                if (isNaN(price) || price <= 0) return;
+                if (!exchangeMap.has(exchangeId) || volume > exchangeMap.get(exchangeId).volume) {
+                    exchangeMap.set(exchangeId, { id: exchangeId, name: exchangeConfig.name, logo: exchangeConfig.logo, url: exchangeConfig.url, features: exchangeConfig.features, price, volume, pair: ticker.base + '/' + ticker.target });
                 }
             });
-
-            // Convert to array and sort by price (ascending)
-            const exchanges = Array.from(exchangeMap.values())
-                .filter(exchange => exchange.price > 0)
-                .sort((a, b) => a.price - b.price);
-
-            console.log(`Final exchanges count: ${exchanges.length}`);
-            return exchanges.slice(0, 15); // Show top 15 exchanges
+            const exchanges = Array.from(exchangeMap.values()).filter(e => e.price > 0).sort((a, b) => a.price - b.price);
+            console.log(`Final exchanges: ${exchanges.length}`);
+            return exchanges.slice(0, 15);
         }
 
-        // UI functions
         function updatePriceHeader(priceData) {
-            const currentPriceEl = document.getElementById('currentPrice');
-            const currentPriceJpyEl = document.getElementById('currentPriceJpy');
-            const priceChangeEl = document.getElementById('priceChange');
-
-            if (priceData) {
-                currentPriceEl.textContent = `$${formatPrice(priceData.usd)}`;
-                currentPriceJpyEl.textContent = `JPY: ¥${formatPrice(priceData.jpy)}`;
-                
-                if (priceData.change24h !== undefined) {
-                    priceChangeEl.textContent = formatPercentage(priceData.change24h);
-                    priceChangeEl.className = `price-change ${priceData.change24h >= 0 ? 'positive' : 'negative'}`;
-                }
+            document.getElementById('currentPrice').textContent = `${userCurrencySymbol}${formatPrice(priceData.price)}`;
+            document.getElementById('currentPriceLocal').textContent = userCurrency !== 'USD' && currencyRates.usd ? `(≈ $${formatPrice(currencyRates.usd)} USD)` : '';
+            if (priceData.change24h !== undefined) {
+                const el = document.getElementById('priceChange');
+                el.textContent = formatPercentage(priceData.change24h);
+                el.className = `price-change ${priceData.change24h >= 0 ? 'positive' : 'negative'}`;
             }
-
-            // Update timestamp
             const now = new Date();
-            document.getElementById('lastUpdate').textContent = 
-                `Last updated: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('lastUpdate').textContent = `Last updated: ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
         }
 
         function renderExchangeCards() {
             const grid = document.getElementById('exchangeGrid');
-            
             if (exchangeData.length === 0) {
                 grid.innerHTML = '<div class="exchange-card"><div class="exchange-header"><div class="exchange-name">No exchange data available</div></div></div>';
                 return;
             }
-
-            grid.innerHTML = exchangeData.map((exchange, index) => `
-                <div class="exchange-card ${index === 0 ? 'best-price' : ''}">
+            grid.innerHTML = exchangeData.map((exchange, index) => {
+                const localPrice = convertPrice(exchange.price);
+                return `<div class="exchange-card ${index === 0 ? 'best-price' : ''}">
                     ${index === 0 ? '<div class="best-price-badge">🏆 Best Price</div>' : ''}
                     <div class="exchange-header">
                         <div class="exchange-logo">${exchange.logo}</div>
-                        <div>
-                            <div class="exchange-name">${exchange.name}</div>
-                            <div class="exchange-id">${exchange.pair}</div>
-                        </div>
+                        <div><div class="exchange-name">${exchange.name}</div><div class="exchange-id">${exchange.pair}</div></div>
                     </div>
                     <div class="price-info">
-                        <div class="price">$${formatPrice(exchange.price)}</div>
+                        <div class="price">${userCurrencySymbol}${formatPrice(localPrice)}</div>
                         <div class="price-details">
                             <span class="volume">Vol: ${formatVolume(exchange.volume)}</span>
-                            <span>¥${formatPrice(exchange.price * usdToJpy)}</span>
+                            ${userCurrency !== 'USD' ? `<span>$${formatPrice(exchange.price)}</span>` : ''}
                         </div>
                     </div>
-                    <ul class="exchange-features">
-                        ${exchange.features.slice(0, 3).map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                    <button class="visit-btn" onclick="window.open('${exchange.url}', '_blank')">
-                        Buy on ${exchange.name}
-                    </button>
-                </div>
-            `).join('');
+                    <ul class="exchange-features">${exchange.features.slice(0, 3).map(f => `<li>${f}</li>`).join('')}</ul>
+                    <button class="visit-btn" onclick="window.open('${exchange.url}', '_blank')">Buy on ${exchange.name}</button>
+                </div>`;
+            }).join('');
         }
 
         function showError(message) {
@@ -748,91 +635,46 @@
 
         function setLoadingState(loading) {
             isLoading = loading;
-            const refreshBtn = document.getElementById('refreshBtn');
-            const spinner = document.getElementById('loadingSpinner');
-            const status = document.getElementById('status');
-
-            refreshBtn.disabled = loading;
-            spinner.style.display = loading ? 'inline-block' : 'none';
-            status.textContent = loading ? 'Fetching latest prices...' : '';
+            document.getElementById('refreshBtn').disabled = loading;
+            document.getElementById('loadingSpinner').style.display = loading ? 'inline-block' : 'none';
         }
 
-        // Main update function
         async function updatePrices() {
             if (isLoading) return;
-
             setLoadingState(true);
             hideError();
-
             try {
-                // Fetch both exchange rates and ticker data
-                const [priceData, tickers] = await Promise.all([
-                    fetchExchangeRates(),
-                    fetchADATickers()
-                ]);
-
-                // Process exchange data
+                const [priceData, tickers] = await Promise.all([fetchExchangeRates(), fetchADATickers()]);
                 exchangeData = processExchangeData(tickers);
-
-                // Update UI
                 updatePriceHeader(priceData);
                 renderExchangeCards();
-
                 console.log(`Updated with ${exchangeData.length} exchanges`);
-
             } catch (error) {
                 console.error('Error updating prices:', error);
                 showError('Failed to fetch price data. Please try again later.');
-                
-                // Show fallback message if no data exists
                 if (exchangeData.length === 0) {
-                    document.getElementById('exchangeGrid').innerHTML = `
-                        <div class="exchange-card">
-                            <div class="exchange-header">
-                                <div class="exchange-logo">⚠️</div>
-                                <div class="exchange-name">Unable to load data</div>
-                            </div>
-                            <div class="price-info">
-                                <div class="price">API Error</div>
-                                <div class="price-details">
-                                    <span>Please try refreshing</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    document.getElementById('exchangeGrid').innerHTML = '<div class="exchange-card"><div class="exchange-header"><div class="exchange-logo">⚠️</div><div class="exchange-name">Unable to load data</div></div><div class="price-info"><div class="price">API Error</div><div class="price-details"><span>Please try refreshing</span></div></div></div>';
                 }
             } finally {
                 setLoadingState(false);
             }
         }
 
-        // Menu active state handler
         function setActiveMenuItem() {
             const currentPath = window.location.pathname;
             const currentFile = currentPath.split('/').pop() || 'index.html';
-            const menuItems = document.querySelectorAll('.nav-links a');
-            
-            menuItems.forEach(item => {
+            document.querySelectorAll('.nav-links a').forEach(item => {
                 item.classList.remove('active');
-                const href = item.getAttribute('href');
-                const hrefFile = href.split('/').pop();
-                
-                if (hrefFile === currentFile) {
-                    item.classList.add('active');
-                }
+                if (item.getAttribute('href').split('/').pop() === currentFile) item.classList.add('active');
             });
         }
 
-        // Event listeners
         document.getElementById('refreshBtn').addEventListener('click', updatePrices);
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             setActiveMenuItem();
-            updatePrices();
+            await detectUserLocation();
+            await updatePrices();
         });
-
-        // Auto-refresh every 2 minutes (respecting API rate limits)
         setInterval(updatePrices, 2 * 60 * 1000);
     </script>
 </body>
