@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Tax Rates by Country - Global Comparison</title>
+    
+    <!-- 共通メニュー用のCSS -->
+    <style>
+    .nav-menu {
+        background-color: #f8f9fa;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: #6f42c1;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .nav-links a:hover {
+        background-color: #e2e6ea;
+    }
+
+    .nav-links a.active {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            gap: 1rem;
+        }
+        
+        .nav-links a {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+    }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .disclaimer-title {
+            color: #856404;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .disclaimer-content {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .content-section {
+            padding: 20px 30px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #0f4c75;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3282b8;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0 0 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .map-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .world-map {
+            width: 100%;
+            height: 500px;
+            background: #e9ecef;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 1.2em;
+        }
+
+        .table-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3282b8;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .tax-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tax-table th {
+            background: linear-gradient(135deg, #0f4c75, #3282b8);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .tax-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tax-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .tax-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .badge-free { background: #d4edda; color: #155724; }
+        .badge-low { background: #d1ecf1; color: #0c5460; }
+        .badge-moderate { background: #fff3cd; color: #856404; }
+        .badge-high { background: #f8d7da; color: #721c24; }
+
+        .last-updated {
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .legend {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 共通メニュー -->
+    <nav class="nav-menu">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html">FAQ</a></li>
+                <li><a href="cards.html">Crypto Cards</a></li>
+                <li><a href="ada-comparison.html">ADA Price Comparison</a></li>
+                <li><a href="crypto-tax.html" class="active">Tax Rates</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Global Crypto Currency Tax Rates Chart</h1>
+            <p>Global comparison of crypto taxation policies</p>
+        </div>
+
+        <!-- 免責事項 -->
+        <div class="disclaimer" style="margin-bottom: 0;">
+            <div class="disclaimer-title">
+                ⚠️ Important Disclaimer
+            </div>
+            <div class="disclaimer-content">
+                <p><strong>This information is for educational and reference purposes only.</strong></p>
+                <p>• Tax rates shown are simplified and may not reflect the complete tax situation in each country<br>
+                • Actual tax liability depends on many factors: holding period, transaction type, income level, and residency status<br>
+                • Tax laws change frequently - always verify with official sources<br>
+                • This is NOT professional tax advice - consult with a qualified tax professional for your specific situation<br>
+                • Data sources: Government websites, KPMG, PwC reports (Last updated: October 2025)</p>
+            </div>
+        </div>
+
+        <!-- 凡例 -->
+        <div class="content-section" style="padding-bottom: 0; padding-top: 20px;">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #28a745;"></div>
+                    <span>Tax-Free (0%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #17a2b8;"></div>
+                    <span>Low Tax (1-15%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc107;"></div>
+                    <span>Moderate Tax (16-30%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc3545;"></div>
+                    <span>High Tax (31%+)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #6c757d;"></div>
+                    <span>Unclear/Unregulated</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 詳細テーブル -->
+        <div class="content-section" style="padding-top: 0;">
+            <div class="table-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Search by country name..." onkeyup="filterTable()">
+                </div>
+                <table class="tax-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Country</th>
+                            <th>Tax Rate</th>
+                            <th>Category</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taxTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="last-updated">
+            Last updated: October 8, 2025 | Data compiled from multiple sources including government websites and tax advisory firms
+        </div>
+    </div>
+
+    <script>
+        const taxData = [
+            { rank: 1, country: "Portugal", rate: 0, category: "free", notes: "No capital gains tax on crypto (for non-professional traders)" },
+            { rank: 2, country: "Singapore", rate: 0, category: "free", notes: "No capital gains tax" },
+            { rank: 3, country: "Switzerland", rate: 0, category: "free", notes: "Crypto held as private wealth is tax-free" },
+            { rank: 4, country: "Germany", rate: 0, category: "free", notes: "Tax-free after 1 year holding period" },
+            { rank: 5, country: "Malta", rate: 0, category: "free", notes: "Long-term holdings are tax-exempt" },
+            { rank: 6, country: "Belarus", rate: 0, category: "free", notes: "Tax-free until 2025" },
+            { rank: 7, country: "Malaysia", rate: 0, category: "free", notes: "No capital gains tax" },
+            { rank: 8, country: "El Salvador", rate: 0, category: "free", notes: "Bitcoin is legal tender, no capital gains tax" },
+            { rank: 9, country: "UAE", rate: 0, category: "free", notes: "No personal income tax or capital gains tax" },
+            { rank: 10, country: "Cayman Islands", rate: 0, category: "free", notes: "Tax haven - no capital gains tax" },
+            { rank: 11, country: "Hong Kong", rate: 0, category: "free", notes: "No capital gains tax (for investors)" },
+            { rank: 12, country: "Puerto Rico", rate: 0, category: "free", notes: "0% for residents under Act 60" },
+            { rank: 13, country: "Slovenia", rate: 0, category: "free", notes: "No tax on individual crypto transactions" },
+            { rank: 14, country: "Austria", rate: 0, category: "free", notes: "Switched to 27.5% in 2022, but historically low" },
+            { rank: 15, country: "Monaco", rate: 0, category: "free", notes: "No personal income tax" },
+            { rank: 16, country: "Bahamas", rate: 0, category: "free", notes: "No capital gains tax" },
+            { rank: 17, country: "Bermuda", rate: 0, category: "free", notes: "No income or capital gains tax" },
+            { rank: 18, country: "Isle of Man", rate: 0, category: "free", notes: "0% capital gains tax" },
+            { rank: 19, country: "British Virgin Islands", rate: 0, category: "free", notes: "No capital gains tax" },
+            { rank: 20, country: "Vanuatu", rate: 0, category: "free", notes: "No income or capital gains tax" },
+            { rank: 21, country: "Georgia", rate: 0, category: "free", notes: "Tax-free for individual investors" },
+            { rank: 22, country: "Barbados", rate: 0, category: "free", notes: "No capital gains tax" },
+            { rank: 23, country: "Turks and Caicos", rate: 0, category: "free", notes: "No income or capital gains tax" },
+            { rank: 24, country: "Cyprus", rate: 0, category: "free", notes: "No capital gains tax on crypto for individuals" },
+            { rank: 25, country: "Luxembourg", rate: 0, category: "free", notes: "Tax-free after 6 months holding period" },
+            { rank: 26, country: "Croatia", rate: 10, category: "low", notes: "10% flat rate on crypto gains" },
+            { rank: 27, country: "Bulgaria", rate: 10, category: "low", notes: "10% flat tax" },
+            { rank: 28, country: "Thailand", rate: 15, category: "low", notes: "15% capital gains tax" },
+            { rank: 29, country: "Czech Republic", rate: 15, category: "low", notes: "15% for individuals holding less than 3 years" },
+            { rank: 30, country: "Hungary", rate: 15, category: "low", notes: "15% flat tax on crypto gains" },
+            { rank: 31, country: "Serbia", rate: 15, category: "low", notes: "15% capital gains tax" },
+            { rank: 32, country: "Lithuania", rate: 15, category: "low", notes: "15% on crypto income" },
+            { rank: 33, country: "Colombia", rate: 15, category: "low", notes: "15% capital gains tax" },
+            { rank: 34, country: "Brazil", rate: 15, category: "low", notes: "15-22.5% progressive" },
+            { rank: 35, country: "Argentina", rate: 15, category: "low", notes: "15% capital gains tax" },
+            { rank: 36, country: "Philippines", rate: 15, category: "low", notes: "15% capital gains tax" },
+            { rank: 37, country: "Poland", rate: 19, category: "moderate", notes: "19% flat tax" },
+            { rank: 38, country: "Russia", rate: 20, category: "moderate", notes: "20% for large gains" },
+            { rank: 39, country: "Estonia", rate: 20, category: "moderate", notes: "20% on crypto income" },
+            { rank: 40, country: "United Kingdom", rate: 20, category: "moderate", notes: "10-20% depending on income" },
+            { rank: 41, country: "Latvia", rate: 20, category: "moderate", notes: "20% on capital gains" },
+            { rank: 42, country: "South Korea", rate: 22, category: "moderate", notes: "22% capital gains tax (from 2025)" },
+            { rank: 43, country: "Norway", rate: 22, category: "moderate", notes: "22% on crypto gains" },
+            { rank: 44, country: "Australia", rate: 25, category: "moderate", notes: "Taxed as income (up to 45%)" },
+            { rank: 45, country: "United States", rate: 25, category: "moderate", notes: "15-20% long-term, up to 37% short-term" },
+            { rank: 46, country: "Canada", rate: 25, category: "moderate", notes: "50% of gains taxed at income rate" },
+            { rank: 47, country: "Israel", rate: 25, category: "moderate", notes: "25% capital gains tax" },
+            { rank: 48, country: "Spain", rate: 26, category: "moderate", notes: "19-26% progressive rate" },
+            { rank: 49, country: "Italy", rate: 26, category: "moderate", notes: "26% capital gains tax" },
+            { rank: 50, country: "South Africa", rate: 27, category: "moderate", notes: "18-27% capital gains tax" },
+            { rank: 51, country: "New Zealand", rate: 28, category: "moderate", notes: "Taxed at marginal income rate (up to 39%)" },
+            { rank: 52, country: "Netherlands", rate: 30, category: "moderate", notes: "~30% effective rate" },
+            { rank: 53, country: "France", rate: 30, category: "moderate", notes: "30% flat tax on crypto gains" },
+            { rank: 54, country: "Sweden", rate: 30, category: "moderate", notes: "30% on capital income" },
+            { rank: 55, country: "Finland", rate: 30, category: "moderate", notes: "30-34% progressive rate" },
+            { rank: 56, country: "India", rate: 30, category: "moderate", notes: "30% + cess on crypto gains" },
+            { rank: 57, country: "Mexico", rate: 30, category: "moderate", notes: "Up to 30% on crypto gains" },
+            { rank: 58, country: "Belgium", rate: 33, category: "high", notes: "33% on speculative gains" },
+            { rank: 59, country: "Chile", rate: 40, category: "high", notes: "Up to 40% as income tax" },
+            { rank: 60, country: "Turkey", rate: 40, category: "high", notes: "Up to 40% progressive tax" },
+            { rank: 61, country: "Denmark", rate: 42, category: "high", notes: "Up to 42% as income tax" },
+            { rank: 62, country: "Japan", rate: 55, category: "high", notes: "Up to 55% (income tax 45% + resident tax 10%) - Total comprehensive taxation. Reform to 20% separated taxation under discussion for 2027." }
+        ];
+
+        function renderTable() {
+            const tableBody = document.getElementById('taxTableBody');
+            
+            taxData.forEach(item => {
+                const row = document.createElement('tr');
+                const badgeClass = item.category === 'free' ? 'badge-free' : 
+                                   item.category === 'low' ? 'badge-low' : 
+                                   item.category === 'moderate' ? 'badge-moderate' : 'badge-high';
+                
+                row.innerHTML = `
+                    <td><strong>${item.rank}</strong></td>
+                    <td>${item.country}</td>
+                    <td><strong>${item.rate}%</strong></td>
+                    <td><span class="tax-badge ${badgeClass}">${item.category.toUpperCase()}</span></td>
+                    <td>${item.notes}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const table = document.querySelector('.tax-table');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const countryCell = rows[i].getElementsByTagName('td')[1];
+                if (countryCell) {
+                    const txtValue = countryCell.textContent || countryCell.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        rows[i].style.display = '';
+                    } else {
+                        rows[i].style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // Initialize
+        renderTable();
+
+        // Set active menu
+        document.querySelectorAll('.nav-links a').forEach(item => {
+            const href = item.getAttribute('href');
+            if (href === 'crypto-tax.html') {
+                item.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
