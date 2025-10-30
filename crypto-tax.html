@@ -225,6 +225,22 @@
             background: #f8f9fa;
         }
 
+        .official-link {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .official-link:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
         .tax-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -330,6 +346,7 @@
                             <th>Country</th>
                             <th>Tax Rate</th>
                             <th>Category</th>
+                            <th>Official Link</th>
                             <th>Notes</th>
                         </tr>
                     </thead>
@@ -345,68 +362,68 @@
 
     <script>
         const taxData = [
-            { rank: 1, country: "Portugal", rate: 0, category: "free", notes: "No capital gains tax on crypto (for non-professional traders)" },
-            { rank: 2, country: "Singapore", rate: 0, category: "free", notes: "No capital gains tax" },
-            { rank: 3, country: "Switzerland", rate: 0, category: "free", notes: "Crypto held as private wealth is tax-free" },
-            { rank: 4, country: "Germany", rate: 0, category: "free", notes: "Tax-free after 1 year holding period" },
-            { rank: 5, country: "Malta", rate: 0, category: "free", notes: "Long-term holdings are tax-exempt" },
-            { rank: 6, country: "Belarus", rate: 0, category: "free", notes: "Tax-free until 2025" },
-            { rank: 7, country: "Malaysia", rate: 0, category: "free", notes: "No capital gains tax" },
-            { rank: 8, country: "El Salvador", rate: 0, category: "free", notes: "Bitcoin is legal tender, no capital gains tax" },
-            { rank: 9, country: "UAE", rate: 0, category: "free", notes: "No personal income tax or capital gains tax" },
-            { rank: 10, country: "Cayman Islands", rate: 0, category: "free", notes: "Tax haven - no capital gains tax" },
-            { rank: 11, country: "Hong Kong", rate: 0, category: "free", notes: "No capital gains tax (for investors)" },
-            { rank: 12, country: "Puerto Rico", rate: 0, category: "free", notes: "0% for residents under Act 60" },
-            { rank: 13, country: "Slovenia", rate: 0, category: "free", notes: "No tax on individual crypto transactions" },
-            { rank: 14, country: "Austria", rate: 0, category: "free", notes: "Switched to 27.5% in 2022, but historically low" },
-            { rank: 15, country: "Monaco", rate: 0, category: "free", notes: "No personal income tax" },
-            { rank: 16, country: "Bahamas", rate: 0, category: "free", notes: "No capital gains tax" },
-            { rank: 17, country: "Bermuda", rate: 0, category: "free", notes: "No income or capital gains tax" },
-            { rank: 18, country: "Isle of Man", rate: 0, category: "free", notes: "0% capital gains tax" },
-            { rank: 19, country: "British Virgin Islands", rate: 0, category: "free", notes: "No capital gains tax" },
-            { rank: 20, country: "Vanuatu", rate: 0, category: "free", notes: "No income or capital gains tax" },
-            { rank: 21, country: "Georgia", rate: 0, category: "free", notes: "Tax-free for individual investors" },
-            { rank: 22, country: "Barbados", rate: 0, category: "free", notes: "No capital gains tax" },
-            { rank: 23, country: "Turks and Caicos", rate: 0, category: "free", notes: "No income or capital gains tax" },
-            { rank: 24, country: "Cyprus", rate: 0, category: "free", notes: "No capital gains tax on crypto for individuals" },
-            { rank: 25, country: "Luxembourg", rate: 0, category: "free", notes: "Tax-free after 6 months holding period" },
-            { rank: 26, country: "Croatia", rate: 10, category: "low", notes: "10% flat rate on crypto gains" },
-            { rank: 27, country: "Bulgaria", rate: 10, category: "low", notes: "10% flat tax" },
-            { rank: 28, country: "Thailand", rate: 15, category: "low", notes: "15% capital gains tax" },
-            { rank: 29, country: "Czech Republic", rate: 15, category: "low", notes: "15% for individuals holding less than 3 years" },
-            { rank: 30, country: "Hungary", rate: 15, category: "low", notes: "15% flat tax on crypto gains" },
-            { rank: 31, country: "Serbia", rate: 15, category: "low", notes: "15% capital gains tax" },
-            { rank: 32, country: "Lithuania", rate: 15, category: "low", notes: "15% on crypto income" },
-            { rank: 33, country: "Colombia", rate: 15, category: "low", notes: "15% capital gains tax" },
-            { rank: 34, country: "Brazil", rate: 15, category: "low", notes: "15-22.5% progressive" },
-            { rank: 35, country: "Argentina", rate: 15, category: "low", notes: "15% capital gains tax" },
-            { rank: 36, country: "Philippines", rate: 15, category: "low", notes: "15% capital gains tax" },
-            { rank: 37, country: "Poland", rate: 19, category: "moderate", notes: "19% flat tax" },
-            { rank: 38, country: "Russia", rate: 20, category: "moderate", notes: "20% for large gains" },
-            { rank: 39, country: "Estonia", rate: 20, category: "moderate", notes: "20% on crypto income" },
-            { rank: 40, country: "United Kingdom", rate: 20, category: "moderate", notes: "10-20% depending on income" },
-            { rank: 41, country: "Latvia", rate: 20, category: "moderate", notes: "20% on capital gains" },
-            { rank: 42, country: "South Korea", rate: 22, category: "moderate", notes: "22% capital gains tax (from 2025)" },
-            { rank: 43, country: "Norway", rate: 22, category: "moderate", notes: "22% on crypto gains" },
-            { rank: 44, country: "Australia", rate: 25, category: "moderate", notes: "Taxed as income (up to 45%)" },
-            { rank: 45, country: "United States", rate: 25, category: "moderate", notes: "15-20% long-term, up to 37% short-term" },
-            { rank: 46, country: "Canada", rate: 25, category: "moderate", notes: "50% of gains taxed at income rate" },
-            { rank: 47, country: "Israel", rate: 25, category: "moderate", notes: "25% capital gains tax" },
-            { rank: 48, country: "Spain", rate: 26, category: "moderate", notes: "19-26% progressive rate" },
-            { rank: 49, country: "Italy", rate: 26, category: "moderate", notes: "26% capital gains tax" },
-            { rank: 50, country: "South Africa", rate: 27, category: "moderate", notes: "18-27% capital gains tax" },
-            { rank: 51, country: "New Zealand", rate: 28, category: "moderate", notes: "Taxed at marginal income rate (up to 39%)" },
-            { rank: 52, country: "Netherlands", rate: 30, category: "moderate", notes: "~30% effective rate" },
-            { rank: 53, country: "France", rate: 30, category: "moderate", notes: "30% flat tax on crypto gains" },
-            { rank: 54, country: "Sweden", rate: 30, category: "moderate", notes: "30% on capital income" },
-            { rank: 55, country: "Finland", rate: 30, category: "moderate", notes: "30-34% progressive rate" },
-            { rank: 56, country: "India", rate: 30, category: "moderate", notes: "30% + cess on crypto gains" },
-            { rank: 57, country: "Mexico", rate: 30, category: "moderate", notes: "Up to 30% on crypto gains" },
-            { rank: 58, country: "Belgium", rate: 33, category: "high", notes: "33% on speculative gains" },
-            { rank: 59, country: "Chile", rate: 40, category: "high", notes: "Up to 40% as income tax" },
-            { rank: 60, country: "Turkey", rate: 40, category: "high", notes: "Up to 40% progressive tax" },
-            { rank: 61, country: "Denmark", rate: 42, category: "high", notes: "Up to 42% as income tax" },
-            { rank: 62, country: "Japan", rate: 55, category: "high", notes: "Up to 55% (income tax 45% + resident tax 10%) - Total comprehensive taxation. Reform to 20% separated taxation under discussion for 2027." }
+            { rank: 1, country: "Portugal", rate: 0, category: "free", link: "https://info.portaldasfinancas.gov.pt/pt/", notes: "No capital gains tax on crypto (for non-professional traders)" },
+            { rank: 2, country: "Singapore", rate: 0, category: "free", link: "https://www.iras.gov.sg/taxes/other-taxes/digital-payment-tokens", notes: "No capital gains tax" },
+            { rank: 3, country: "Switzerland", rate: 0, category: "free", link: "https://www.estv.admin.ch/estv/en/home.html", notes: "Crypto held as private wealth is tax-free" },
+            { rank: 4, country: "Germany", rate: 0, category: "free", link: "https://www.bundesfinanzministerium.de/", notes: "Tax-free after 1 year holding period" },
+            { rank: 5, country: "Malta", rate: 0, category: "free", link: "", notes: "Long-term holdings are tax-exempt" },
+            { rank: 6, country: "Belarus", rate: 0, category: "free", link: "", notes: "Tax-free until 2025" },
+            { rank: 7, country: "Malaysia", rate: 0, category: "free", link: "", notes: "No capital gains tax" },
+            { rank: 8, country: "El Salvador", rate: 0, category: "free", link: "", notes: "Bitcoin is legal tender, no capital gains tax" },
+            { rank: 9, country: "UAE", rate: 0, category: "free", link: "", notes: "No personal income tax or capital gains tax" },
+            { rank: 10, country: "Cayman Islands", rate: 0, category: "free", link: "", notes: "Tax haven - no capital gains tax" },
+            { rank: 11, country: "Hong Kong", rate: 0, category: "free", link: "https://www.ird.gov.hk/eng/tax/bus_pft.htm", notes: "No capital gains tax (for investors)" },
+            { rank: 12, country: "Puerto Rico", rate: 0, category: "free", link: "", notes: "0% for residents under Act 60" },
+            { rank: 13, country: "Slovenia", rate: 0, category: "free", link: "", notes: "No tax on individual crypto transactions" },
+            { rank: 14, country: "Austria", rate: 0, category: "free", link: "", notes: "Switched to 27.5% in 2022, but historically low" },
+            { rank: 15, country: "Monaco", rate: 0, category: "free", link: "", notes: "No personal income tax" },
+            { rank: 16, country: "Bahamas", rate: 0, category: "free", link: "", notes: "No capital gains tax" },
+            { rank: 17, country: "Bermuda", rate: 0, category: "free", link: "", notes: "No income or capital gains tax" },
+            { rank: 18, country: "Isle of Man", rate: 0, category: "free", link: "", notes: "0% capital gains tax" },
+            { rank: 19, country: "British Virgin Islands", rate: 0, category: "free", link: "", notes: "No capital gains tax" },
+            { rank: 20, country: "Vanuatu", rate: 0, category: "free", link: "", notes: "No income or capital gains tax" },
+            { rank: 21, country: "Georgia", rate: 0, category: "free", link: "", notes: "Tax-free for individual investors" },
+            { rank: 22, country: "Barbados", rate: 0, category: "free", link: "", notes: "No capital gains tax" },
+            { rank: 23, country: "Turks and Caicos", rate: 0, category: "free", link: "", notes: "No income or capital gains tax" },
+            { rank: 24, country: "Cyprus", rate: 0, category: "free", link: "", notes: "No capital gains tax on crypto for individuals" },
+            { rank: 25, country: "Luxembourg", rate: 0, category: "free", link: "", notes: "Tax-free after 6 months holding period" },
+            { rank: 26, country: "Croatia", rate: 10, category: "low", link: "", notes: "10% flat rate on crypto gains" },
+            { rank: 27, country: "Bulgaria", rate: 10, category: "low", link: "", notes: "10% flat tax" },
+            { rank: 28, country: "Thailand", rate: 15, category: "low", link: "", notes: "15% capital gains tax" },
+            { rank: 29, country: "Czech Republic", rate: 15, category: "low", link: "", notes: "15% for individuals holding less than 3 years" },
+            { rank: 30, country: "Hungary", rate: 15, category: "low", link: "", notes: "15% flat tax on crypto gains" },
+            { rank: 31, country: "Serbia", rate: 15, category: "low", link: "", notes: "15% capital gains tax" },
+            { rank: 32, country: "Lithuania", rate: 15, category: "low", link: "", notes: "15% on crypto income" },
+            { rank: 33, country: "Colombia", rate: 15, category: "low", link: "", notes: "15% capital gains tax" },
+            { rank: 34, country: "Brazil", rate: 15, category: "low", link: "https://www.gov.br/receitafederal/pt-br", notes: "15-22.5% progressive" },
+            { rank: 35, country: "Argentina", rate: 15, category: "low", link: "", notes: "15% capital gains tax" },
+            { rank: 36, country: "Philippines", rate: 15, category: "low", link: "", notes: "15% capital gains tax" },
+            { rank: 37, country: "Poland", rate: 19, category: "moderate", link: "", notes: "19% flat tax" },
+            { rank: 38, country: "Russia", rate: 20, category: "moderate", link: "", notes: "20% for large gains" },
+            { rank: 39, country: "Estonia", rate: 20, category: "moderate", link: "", notes: "20% on crypto income" },
+            { rank: 40, country: "United Kingdom", rate: 20, category: "moderate", link: "https://www.gov.uk/government/publications/tax-on-cryptoassets", notes: "10-20% depending on income" },
+            { rank: 41, country: "Latvia", rate: 20, category: "moderate", link: "", notes: "20% on capital gains" },
+            { rank: 42, country: "South Korea", rate: 22, category: "moderate", link: "", notes: "22% capital gains tax (from 2025)" },
+            { rank: 43, country: "Norway", rate: 22, category: "moderate", link: "", notes: "22% on crypto gains" },
+            { rank: 44, country: "Australia", rate: 25, category: "moderate", link: "https://www.ato.gov.au/individuals-and-families/investments-and-assets/crypto-asset-investments", notes: "Taxed as income (up to 45%)" },
+            { rank: 45, country: "United States", rate: 25, category: "moderate", link: "https://www.irs.gov/businesses/small-businesses-self-employed/digital-assets", notes: "15-20% long-term, up to 37% short-term" },
+            { rank: 46, country: "Canada", rate: 25, category: "moderate", link: "https://www.canada.ca/en/revenue-agency/programs/about-canada-revenue-agency-cra/compliance/digital-currency/cryptocurrency-guide.html", notes: "50% of gains taxed at income rate" },
+            { rank: 47, country: "Israel", rate: 25, category: "moderate", link: "", notes: "25% capital gains tax" },
+            { rank: 48, country: "Spain", rate: 26, category: "moderate", link: "", notes: "19-26% progressive rate" },
+            { rank: 49, country: "Italy", rate: 26, category: "moderate", link: "", notes: "26% capital gains tax" },
+            { rank: 50, country: "South Africa", rate: 27, category: "moderate", link: "", notes: "18-27% capital gains tax" },
+            { rank: 51, country: "New Zealand", rate: 28, category: "moderate", link: "", notes: "Taxed at marginal income rate (up to 39%)" },
+            { rank: 52, country: "Netherlands", rate: 30, category: "moderate", link: "", notes: "~30% effective rate" },
+            { rank: 53, country: "France", rate: 30, category: "moderate", link: "https://www.impots.gouv.fr/international/en", notes: "30% flat tax on crypto gains" },
+            { rank: 54, country: "Sweden", rate: 30, category: "moderate", link: "", notes: "30% on capital income" },
+            { rank: 55, country: "Finland", rate: 30, category: "moderate", link: "", notes: "30-34% progressive rate" },
+            { rank: 56, country: "India", rate: 30, category: "moderate", link: "", notes: "30% + cess on crypto gains" },
+            { rank: 57, country: "Mexico", rate: 30, category: "moderate", link: "", notes: "Up to 30% on crypto gains" },
+            { rank: 58, country: "Belgium", rate: 33, category: "high", link: "", notes: "33% on speculative gains" },
+            { rank: 59, country: "Chile", rate: 40, category: "high", link: "", notes: "Up to 40% as income tax" },
+            { rank: 60, country: "Turkey", rate: 40, category: "high", link: "", notes: "Up to 40% progressive tax" },
+            { rank: 61, country: "Denmark", rate: 42, category: "high", link: "", notes: "Up to 42% as income tax" },
+            { rank: 62, country: "Japan", rate: 55, category: "high", link: "https://www.nta.go.jp/english/taxes/others/virtual.htm", notes: "Up to 55% (income tax 45% + resident tax 10%) - Total comprehensive taxation. Reform to 20% separated taxation under discussion for 2027." }
         ];
 
         function renderTable() {
@@ -418,11 +435,16 @@
                                    item.category === 'low' ? 'badge-low' : 
                                    item.category === 'moderate' ? 'badge-moderate' : 'badge-high';
                 
+                const linkCell = item.link ? 
+                    `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="official-link">Official Page</a>` : 
+                    '<span style="color: #999;">N/A</span>';
+                
                 row.innerHTML = `
                     <td><strong>${item.rank}</strong></td>
                     <td>${item.country}</td>
                     <td><strong>${item.rate}%</strong></td>
                     <td><span class="tax-badge ${badgeClass}">${item.category.toUpperCase()}</span></td>
+                    <td>${linkCell}</td>
                     <td>${item.notes}</td>
                 `;
                 tableBody.appendChild(row);
