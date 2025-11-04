@@ -3,60 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - Crypto Station</title>
+    <title>Contact Us - Crypto Station</title>
     
     <!-- 共通メニュー用のCSS -->
     <style>
     .nav-menu {
-        background-color: #f8f9fa;
-        padding: 1rem 0;
-        margin-bottom: 2rem;
-        border-bottom: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.site-logo {
+    height: 40px;
+    width: auto;
+    transition: opacity 0.3s;
+}
+
+.light-logo {
+    display: block;
+}
+
+.dark-logo {
+    display: none;
+}
+
+[data-theme="dark"] .light-logo {
+    display: none;
+}
+
+[data-theme="dark"] .dark-logo {
+    display: block;
+}
+
+[data-theme="dark"] .nav-menu {
+    background-color: #16213e;
+    border-bottom-color: #2a2a3e;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #6f42c1;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.nav-links a:hover {
+    background-color: #e2e6ea;
+}
+
+.nav-links a.active {
+    background-color: #6f42c1;
+    color: white;
+}
+
+[data-theme="dark"] .nav-links a:hover {
+    background-color: #2a2a3e;
+}
+
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    .nav-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
+    .site-logo {
+        height: 35px;
     }
 
     .nav-links {
-        display: flex;
-        gap: 2rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
     }
-
+    
     .nav-links a {
-        text-decoration: none;
-        color: #6f42c1;
-        font-weight: 600;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: background-color 0.2s;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
     }
-
-    .nav-links a:hover {
-        background-color: #e2e6ea;
-    }
-
-    .nav-links a.active {
-        background-color: #6f42c1;
-        color: white;
-    }
-
-    @media (max-width: 768px) {
-        .nav-links {
-            gap: 1rem;
-        }
-        
-        .nav-links a {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.9rem;
-        }
-    }
+}
     </style>
     
     <style>
@@ -131,72 +182,113 @@
 
         .content-container h2 {
             color: var(--gradient-start);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .content-container h2:first-child {
             margin-top: 0;
+            margin-bottom: 1rem;
         }
 
         .content-container p {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             color: var(--text-secondary);
         }
 
-        .content-container ul {
-            margin-bottom: 1rem;
-            padding-left: 2rem;
-        }
-
-        .content-container li {
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-
-        .info-box {
+        .contact-info {
             background: var(--bg-primary);
             padding: 1.5rem;
             border-radius: 8px;
+            margin-bottom: 2rem;
             border-left: 4px solid var(--gradient-start);
-            margin: 1.5rem 0;
         }
 
-        .info-box h3 {
+        .contact-info h3 {
             margin-top: 0;
             color: var(--gradient-start);
         }
 
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+        .contact-info p {
+            margin: 0.5rem 0;
         }
 
-        .feature-card {
-            background: var(--bg-primary);
-            padding: 1.5rem;
-            border-radius: 8px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px var(--shadow);
-        }
-
-        .feature-card h3 {
-            color: var(--gradient-start);
+        .form-group label {
+            display: block;
             margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .required {
+            color: #dc3545;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
         }
 
         .footer {
@@ -229,99 +321,72 @@
     <!-- Navigation Menu -->
     <nav class="nav-menu">
         <div class="nav-container">
-            <ul class="nav-links">
+        <a href="index.html" class="logo-link">
+            <img src="crypto-station_logo_whilte.png" alt="Crypto Station" class="site-logo light-logo">
+            <img src="crypto-station_logo_black.png" alt="Crypto Station" class="site-logo dark-logo">
+        </a>
+        <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="cards.html">Crypto Cards</a></li>
                 <li><a href="crypto-tax.html">Tax Information</a></li>
                 <li><a href="ada-comparison.html">ADA Comparison</a></li>
-                <li><a href="about.html" class="active">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="header">
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
-        <h1>About Crypto Station</h1>
-        <p>Your trusted source for cryptocurrency information</p>
+        <h1>Contact Us</h1>
+        <p>We'd love to hear from you</p>
     </div>
 
     <div class="content-container">
-        <h2>Who We Are</h2>
-        <p>Crypto Station is a comprehensive information portal dedicated to providing accurate and up-to-date information about cryptocurrency-enabled credit cards and global cryptocurrency taxation. Based in Fukuoka, Japan, we strive to be your go-to resource for navigating the evolving world of digital assets.</p>
+        <h2>Get in Touch</h2>
+        <p>Have questions about cryptocurrency cards, tax information, or our content? Feel free to reach out to us using the form below or through our direct contact information.</p>
 
-        <h2>Our Mission</h2>
-        <p>Our mission is to empower individuals and businesses with clear, reliable information about:</p>
-        <ul>
-            <li>Cryptocurrency-enabled credit cards and payment solutions</li>
-            <li>Tax regulations and compliance across different countries</li>
-            <li>Best practices for managing digital assets</li>
-            <li>Updates on the latest developments in the crypto space</li>
-        </ul>
+        <div class="contact-info">
+            <h3>Contact Information</h3>
+            <p><strong>Email:</strong> info@crypto-station.org</p>
+            <p><strong>Location:</strong> Fukuoka, Japan</p>
+            <p><strong>Response Time:</strong> We typically respond within 24-48 hours</p>
+        </div>
 
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">💳</div>
-                <h3>Crypto Cards</h3>
-                <p>Comprehensive reviews and comparisons of cryptocurrency credit cards worldwide</p>
+        <div id="alertMessage" class="alert"></div>
+
+        <form id="contactForm" action="send-contact.php" method="POST">
+            <div class="form-group">
+                <label for="name">Name <span class="required">*</span></label>
+                <input type="text" id="name" name="name" required>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Tax Information</h3>
-                <p>Up-to-date tax regulations and guidelines for crypto holders across different countries</p>
+
+            <div class="form-group">
+                <label for="email">Email Address <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔍</div>
-                <h3>Research & Analysis</h3>
-                <p>In-depth research and analysis of cryptocurrency trends and developments</p>
+
+            <div class="form-group">
+                <label for="subject">Subject <span class="required">*</span></label>
+                <select id="subject" name="subject" required>
+                    <option value="">Please select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="crypto-cards">Crypto Cards Question</option>
+                    <option value="tax-info">Tax Information</option>
+                    <option value="technical">Technical Support</option>
+                    <option value="partnership">Partnership Opportunity</option>
+                    <option value="feedback">Feedback</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
-        </div>
 
-        <h2>What We Cover</h2>
-        <p>Crypto Station provides detailed information on:</p>
-        
-        <div class="info-box">
-            <h3>Cryptocurrency Credit Cards</h3>
-            <p>We review and compare various cryptocurrency-enabled credit cards, including cashback rates, rewards programs, fees, supported cryptocurrencies, and availability by region. Our goal is to help you find the best card that suits your needs.</p>
-        </div>
+            <div class="form-group">
+                <label for="message">Message <span class="required">*</span></label>
+                <textarea id="message" name="message" required placeholder="Please provide details about your inquiry..."></textarea>
+            </div>
 
-        <div class="info-box">
-            <h3>Global Cryptocurrency Taxation</h3>
-            <p>Understanding cryptocurrency tax obligations can be complex. We provide clear explanations of tax regulations in different countries, including capital gains tax, income tax on crypto earnings, reporting requirements, and tax optimization strategies.</p>
-        </div>
-
-        <div class="info-box">
-            <h3>Educational Resources</h3>
-            <p>We offer guides, tutorials, and FAQs to help both beginners and experienced users understand cryptocurrency concepts, security best practices, and the latest industry developments.</p>
-        </div>
-
-        <h2>Why Trust Us</h2>
-        <ul>
-            <li><strong>Accurate Information:</strong> We thoroughly research and verify all information before publishing</li>
-            <li><strong>Regular Updates:</strong> Our content is regularly updated to reflect the latest changes in regulations and products</li>
-            <li><strong>Unbiased Reviews:</strong> We provide honest, unbiased reviews to help you make informed decisions</li>
-            <li><strong>Community Focus:</strong> We listen to our readers and continuously improve based on feedback</li>
-        </ul>
-
-        <h2>Affiliate Disclosure</h2>
-        <p>Crypto Station may receive compensation when you click on certain links or sign up for products/services featured on our site. This helps us maintain and improve our content while keeping it free for our users. We only recommend products and services we believe will provide value to our readers. Our affiliate relationships do not influence our editorial content or product reviews.</p>
-
-        <h2>Contact Information</h2>
-        <p>We welcome your questions, suggestions, and feedback. Please feel free to reach out to us:</p>
-        <p>
-            <strong>Crypto Station</strong><br>
-            Location: Fukuoka, Japan<br>
-            Email: info@crypto-station.org<br>
-            Website: crypto-station.org
-        </p>
-
-        <h2>Stay Connected</h2>
-        <p>Stay up-to-date with the latest cryptocurrency news, card reviews, and tax information by visiting our website regularly. We continuously add new content and update existing information to ensure you have access to the most current and relevant information.</p>
-
-        <h2>Legal Disclaimer</h2>
-        <p>The information provided on Crypto Station is for educational and informational purposes only. It should not be considered as financial, legal, or tax advice. Cryptocurrency investments carry risk, and tax regulations vary by jurisdiction. We recommend consulting with qualified professionals before making any financial or legal decisions.</p>
-
-        <p>While we strive to provide accurate and up-to-date information, cryptocurrency regulations and products change frequently. Always verify current information with official sources and service providers.</p>
+            <button type="submit" class="submit-btn" id="submitBtn">Send Message</button>
+        </form>
     </div>
 
     <footer class="footer">
@@ -364,6 +429,58 @@
                 themeToggleBtn.textContent = '🌙 Dark Mode';
             }
         }
+
+        // Form submission handling
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            
+            // Get form data
+            const formData = new FormData(this);
+            
+            // Send form data
+            fetch('send-contact.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    alertMessage.textContent = data.message;
+                    alertMessage.className = 'alert alert-success';
+                    alertMessage.style.display = 'block';
+                    
+                    // Reset form
+                    document.getElementById('contactForm').reset();
+                } else {
+                    // Show error message
+                    alertMessage.textContent = data.message;
+                    alertMessage.className = 'alert alert-error';
+                    alertMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                // Show error message
+                alertMessage.textContent = 'An error occurred. Please try again or email us directly at info@crypto-station.org';
+                alertMessage.className = 'alert alert-error';
+                alertMessage.style.display = 'block';
+            })
+            .finally(() => {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
+                
+                // Scroll to alert message
+                alertMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
         
         // Initialize
         initTheme();
