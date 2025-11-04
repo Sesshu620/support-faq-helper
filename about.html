@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Crypto Station</title>
+    
+    <!-- 共通メニュー用のCSS -->
+    <style>
+    .nav-menu {
+        background-color: #f8f9fa;
+        padding: 1rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        text-decoration: none;
+        color: #6f42c1;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+
+    .nav-links a:hover {
+        background-color: #e2e6ea;
+    }
+
+    .nav-links a.active {
+        background-color: #6f42c1;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            gap: 1rem;
+        }
+        
+        .nav-links a {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+    }
+    </style>
+    
+    <style>
+        :root {
+            --bg-primary: #f8f9fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #495057;
+            --border-color: #e9ecef;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --text-primary: #eaeaea;
+            --text-secondary: #b0b0b0;
+            --border-color: #2a2a3e;
+            --gradient-start: #667eea;
+            --gradient-end: #764ba2;
+            --shadow: rgba(0,0,0,0.3);
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content-container {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .content-container h2 {
+            color: var(--gradient-start);
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .content-container h2:first-child {
+            margin-top: 0;
+        }
+
+        .content-container p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .content-container ul {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content-container li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .info-box {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--gradient-start);
+            margin: 1.5rem 0;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+            color: var(--gradient-start);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px var(--shadow);
+        }
+
+        .feature-card h3 {
+            color: var(--gradient-start);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="nav-menu">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="cards.html">Crypto Cards</a></li>
+                <li><a href="crypto-tax.html">Tax Information</a></li>
+                <li><a href="ada-comparison.html">ADA Comparison</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="header">
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+        <h1>About Crypto Station</h1>
+        <p>Your trusted source for cryptocurrency information</p>
+    </div>
+
+    <div class="content-container">
+        <h2>Who We Are</h2>
+        <p>Crypto Station is a comprehensive information portal dedicated to providing accurate and up-to-date information about cryptocurrency-enabled credit cards and global cryptocurrency taxation. Based in Fukuoka, Japan, we strive to be your go-to resource for navigating the evolving world of digital assets.</p>
+
+        <h2>Our Mission</h2>
+        <p>Our mission is to empower individuals and businesses with clear, reliable information about:</p>
+        <ul>
+            <li>Cryptocurrency-enabled credit cards and payment solutions</li>
+            <li>Tax regulations and compliance across different countries</li>
+            <li>Best practices for managing digital assets</li>
+            <li>Updates on the latest developments in the crypto space</li>
+        </ul>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Crypto Cards</h3>
+                <p>Comprehensive reviews and comparisons of cryptocurrency credit cards worldwide</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Tax Information</h3>
+                <p>Up-to-date tax regulations and guidelines for crypto holders across different countries</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Research & Analysis</h3>
+                <p>In-depth research and analysis of cryptocurrency trends and developments</p>
+            </div>
+        </div>
+
+        <h2>What We Cover</h2>
+        <p>Crypto Station provides detailed information on:</p>
+        
+        <div class="info-box">
+            <h3>Cryptocurrency Credit Cards</h3>
+            <p>We review and compare various cryptocurrency-enabled credit cards, including cashback rates, rewards programs, fees, supported cryptocurrencies, and availability by region. Our goal is to help you find the best card that suits your needs.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Global Cryptocurrency Taxation</h3>
+            <p>Understanding cryptocurrency tax obligations can be complex. We provide clear explanations of tax regulations in different countries, including capital gains tax, income tax on crypto earnings, reporting requirements, and tax optimization strategies.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Educational Resources</h3>
+            <p>We offer guides, tutorials, and FAQs to help both beginners and experienced users understand cryptocurrency concepts, security best practices, and the latest industry developments.</p>
+        </div>
+
+        <h2>Why Trust Us</h2>
+        <ul>
+            <li><strong>Accurate Information:</strong> We thoroughly research and verify all information before publishing</li>
+            <li><strong>Regular Updates:</strong> Our content is regularly updated to reflect the latest changes in regulations and products</li>
+            <li><strong>Unbiased Reviews:</strong> We provide honest, unbiased reviews to help you make informed decisions</li>
+            <li><strong>Community Focus:</strong> We listen to our readers and continuously improve based on feedback</li>
+        </ul>
+
+        <h2>Affiliate Disclosure</h2>
+        <p>Crypto Station may receive compensation when you click on certain links or sign up for products/services featured on our site. This helps us maintain and improve our content while keeping it free for our users. We only recommend products and services we believe will provide value to our readers. Our affiliate relationships do not influence our editorial content or product reviews.</p>
+
+        <h2>Contact Information</h2>
+        <p>We welcome your questions, suggestions, and feedback. Please feel free to reach out to us:</p>
+        <p>
+            <strong>Crypto Station</strong><br>
+            Location: Fukuoka, Japan<br>
+            Email: info@crypto-station.org<br>
+            Website: crypto-station.org
+        </p>
+
+        <h2>Stay Connected</h2>
+        <p>Stay up-to-date with the latest cryptocurrency news, card reviews, and tax information by visiting our website regularly. We continuously add new content and update existing information to ensure you have access to the most current and relevant information.</p>
+
+        <h2>Legal Disclaimer</h2>
+        <p>The information provided on Crypto Station is for educational and informational purposes only. It should not be considered as financial, legal, or tax advice. Cryptocurrency investments carry risk, and tax regulations vary by jurisdiction. We recommend consulting with qualified professionals before making any financial or legal decisions.</p>
+
+        <p>While we strive to provide accurate and up-to-date information, cryptocurrency regulations and products change frequently. Always verify current information with official sources and service providers.</p>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+        <p>&copy; 2025 Crypto Station. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Theme toggle function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const themeToggleBtn = document.getElementById('themeToggle');
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeToggleBtn.textContent = '☀️ Light Mode';
+            } else {
+                themeToggleBtn.textContent = '🌙 Dark Mode';
+            }
+        }
+        
+        // Initialize theme from localStorage
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const themeToggleBtn = document.getElementById('themeToggle');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            if (savedTheme === 'dark') {
+                themeToggleBtn.textContent = '☀️ Light Mode';
+            } else {
+                themeToggleBtn.textContent = '🌙 Dark Mode';
+            }
+        }
+        
+        // Initialize
+        initTheme();
+    </script>
+</body>
+</html>

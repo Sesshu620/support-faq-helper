@@ -68,6 +68,8 @@
             <li><a href="cards.html" id="nav-cards">Crypto Cards</a></li>
             <li><a href="ada-comparison.html" id="nav-ada">ADA Price Comparison</a></li>
             <li><a href="crypto-tax.html" id="nav-tax">Tax Rates</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
         </ul>
     </div>
 </nav>
@@ -393,6 +395,32 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
             .header h1 {
                 font-size: 2rem;
             }
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -826,5 +854,15 @@ document.addEventListener('DOMContentLoaded', setActiveMenuItem);
         // Initial sort header update
         updateSortHeaders();
     </script>
+    
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy-policy.html">Privacy Policy</a>
+        </div>
+        <p>&copy; 2025 Crypto Station. All rights reserved.</p>
+    </footer>
 </body>
 </html>
