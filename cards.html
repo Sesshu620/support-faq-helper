@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Card Rankings</title>
+    
+    <!-- ✅ Google AdSense 所有権確認コード -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8299108249562278"
+     crossorigin="anonymous"></script>
     <!-- 共通メニュー用のCSS（各ページのheadに追加） -->
 
 <!-- 共通メニュー用のCSS（各ページのheadに追加） -->
@@ -19,6 +23,43 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.site-logo {
+    height: 120px;
+    width: auto;
+    transition: opacity 0.3s;
+}
+
+.light-logo {
+    display: block;
+}
+
+.dark-logo {
+    display: none;
+}
+
+[data-theme="dark"] .light-logo {
+    display: none;
+}
+
+[data-theme="dark"] .dark-logo {
+    display: block;
+}
+
+[data-theme="dark"] .nav-menu {
+    background-color: #16213e;
+    border-bottom-color: #2a2a3e;
 }
 
 .nav-links {
@@ -48,9 +89,23 @@
     color: white;
 }
 
+[data-theme="dark"] .nav-links a:hover {
+    background-color: #2a2a3e;
+}
+
 @media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .site-logo {
+        height: 105px;
+    }
+
     .nav-links {
         gap: 1rem;
+        justify-content: center;
     }
     
     .nav-links a {
@@ -63,6 +118,10 @@
 <!-- 共通メニューHTML（各ページのbody開始直後に追加） -->
 <nav class="nav-menu">
     <div class="nav-container">
+        <a href="index.html" class="logo-link">
+            <img src="crypto-station_logo_whilte.png" alt="Crypto Station" class="site-logo light-logo">
+            <img src="crypto-station_logo_black.png" alt="Crypto Station" class="site-logo dark-logo">
+        </a>
         <ul class="nav-links">
             <li><a href="index.html" id="nav-faq">FAQ</a></li>
             <li><a href="cards.html" id="nav-cards">Crypto Cards</a></li>
